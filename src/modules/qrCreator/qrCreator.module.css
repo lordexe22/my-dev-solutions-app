@@ -1,0 +1,56 @@
+/* src\modules\qrCreator\qrCreator.module.css */
+
+/* #style :root and :root * config */
+:root, :root *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;  
+}
+/* #end-style */
+/* #style :root */
+:root{
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+}
+/* #end-style */
+/* #style .container */
+.container{
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 5px;
+  border: medium solid black;
+  column-gap: 5px;
+}
+/* #end-style */
+/* #style .container .options-menu */
+.container .options-menu {
+  border: medium solid black;
+  display: flex;
+  flex-direction: row;
+  background-color: #bbf;
+  flex: 70;
+  padding: 5px;
+}
+/* #end-style */
+/* #style .options-menu .options-group */
+.options-menu .options-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 10px;
+  border: thin solid red;
+}
+/* #end-style */
+/* #style .container .display-qr-section */
+.container .display-qr-section {
+  border: medium solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccf;
+  flex: 30;
+}
+/* #end-style */

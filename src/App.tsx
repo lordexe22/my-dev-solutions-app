@@ -1,11 +1,12 @@
-import RegisterForm from "./testing/RegisterForm/RegisterForm"
+import QRCreator from "./modules/qrCreator/qrCreator";
+// import CollapsibleContainer from './modules/collapsibleContainer/collapsibleContainer';
+import './styles.css';
 
 const App = () => {
 
   return (
     <>
-      <h1>App</h1>
-      <RegisterForm/>
+      <QRCreator/>
     </>
   )
 }
