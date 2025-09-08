@@ -1,0 +1,9 @@
+
+
+
+
+
+
+## to fix
+1. el manejo del margen proporcionado por la libreria qr-code-styling no procesa pixel a pixel el resultado final, 
+se va a tener que manipularlo con css
