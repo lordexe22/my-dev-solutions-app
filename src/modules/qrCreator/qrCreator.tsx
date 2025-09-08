@@ -39,7 +39,7 @@ const QRCreator = () => {
   // #state [gradientColors, setGradientColors] - two colors for the gradient
   const [gradientColors, setGradientColors] = useState<[string, string]>(['#000000', '#ff0000']);
   // #end-state
-  // #state [rotation, setRotation] - rotation of the gradient
+  // #state [rotation, setRotation] - rotation of the gradient (solo para UI, no afecta re-render)
   const [rotation, setRotation] = useState(0);
   // #end-state
 
@@ -64,9 +64,21 @@ const QRCreator = () => {
       imageOptions: {
         crossOrigin: "anonymous",
         margin: 5
+      },
+      cornersSquareOptions:{
+        color: '000',
+        type: 'square'
+      },
+      cornersDotOptions:{
+        color: '000',
+        type: 'square'
       }
     })
   )
+  // #end-variable
+
+  // #variable rotationRef - mantiene el valor actual de rotación sin causar re-render
+  const rotationRef = useRef(0);
   // #end-variable
   
   useEffect(() => {
@@ -77,7 +89,9 @@ const QRCreator = () => {
 
   useEffect(() => {
     const dotsOptions: Record<string, unknown> = {
-      type: dotsStyle
+      type: dotsStyle,
+      gradient: undefined,
+      color: undefined
     }
 
     if (colorType === 'single') {
@@ -85,7 +99,7 @@ const QRCreator = () => {
     } else {
       dotsOptions.gradient = {
         type: gradientType,
-        rotation,
+        rotation: (rotationRef.current * Math.PI) / 180,
         colorStops: [
           { offset: 0, color: gradientColors[0] },
           { offset: 1, color: gradientColors[1] }
@@ -101,8 +115,8 @@ const QRCreator = () => {
       image: image || undefined,
       dotsOptions
     })
-  }, [url, width, height, margin, image, dotsStyle, colorType, dotsColor, gradientType, gradientColors, rotation])
-
+  }, [url, width, height, margin, image, dotsStyle, colorType, dotsColor, gradientType, gradientColors])
+  // 👆 rotation eliminado de dependencias para que no fuerce renderizado continuo
 
 return (
     <>
@@ -169,12 +183,17 @@ return (
               {/* #end-section */}
               {/* #section image input */}
               <label>
-                Center Image URL:
+                Center Image:
                 <input
-                  type="text"
-                  placeholder="Enter image URL"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      const objectUrl = URL.createObjectURL(file)
+                      setImage(objectUrl)
+                    }
+                  }}
                   className={style['url-input']}
                 />
               </label>
@@ -202,27 +221,16 @@ return (
               </label>
               {/* #end-section */}
               {/* #section color type */}
-              <div>
-                <span>Color Type:</span>
-                <label>
-                  <input
-                    type="radio"
-                    value="single"
-                    checked={colorType === 'single'}
-                    onChange={() => setColorType('single')}
-                  />
-                  Single Color
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="gradient"
-                    checked={colorType === 'gradient'}
-                    onChange={() => setColorType('gradient')}
-                  />
-                  Color Gradient
-                </label>
-              </div>
+              <label>
+                Color Type:
+                <select
+                  value={colorType}
+                  onChange={(e) => setColorType(e.target.value as 'single' | 'gradient')}
+                >
+                  <option value="single">Single Color</option>
+                  <option value="gradient">Color Gradient</option>
+                </select>
+              </label>
               {/* #end-section */}
               {/* #section dots color */}
               {colorType === 'single' && (
@@ -240,62 +248,79 @@ return (
               {/* #end-section */}
               {/* #section gradient type */}
               {colorType === 'gradient' && (
-                <>
-                  <div>
-                    <span>Gradient Type:</span>
-                    <label>
-                      <input
-                        type="radio"
-                        value="linear"
-                        checked={gradientType === 'linear'}
-                        onChange={() => setGradientType('linear')}
-                      />
-                      Linear
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        value="radial"
-                        checked={gradientType === 'radial'}
-                        onChange={() => setGradientType('radial')}
-                      />
-                      Radial
-                    </label>
-                  </div>
-                  {/* #section gradient colors */}
-                  <div>
-                    <label>
-                      Gradient Colors:
-                      <input
-                        type="color"
-                        value={gradientColors[0]}
-                        onChange={(e) =>
-                          setGradientColors([e.target.value, gradientColors[1]])
-                        }
-                      />
-                      <input
-                        type="color"
-                        value={gradientColors[1]}
-                        onChange={(e) =>
-                          setGradientColors([gradientColors[0], e.target.value])
-                        }
-                      />
-                    </label>
-                  </div>
-                  {/* #end-section */}
-                  {/* #section rotation */}
-                  <label>
-                    Rotation:
+                <label>
+                  Gradient type:
+                  <select
+                    value={gradientType}
+                    onChange={(e) => setGradientType(e.target.value as 'linear' | 'radial')}
+                  >
+                    <option value="linear">Linear</option>
+                    <option value="radial">Radial</option>
+                  </select>
+                </label> 
+              )}
+              {/* #end-section */}
+              {/* #section dots color */}
+              {colorType === 'gradient' && (
+                <label>
+                  Dots colors:
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                     <input
-                      type="number"
+                      type="color"
+                      value={gradientColors[0]}
+                      onChange={(e) => setGradientColors([e.target.value, gradientColors[1]])}
+                    />
+                    <input
+                      type="color"
+                      value={gradientColors[1]}
+                      onChange={(e) => setGradientColors([gradientColors[0], e.target.value])}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setGradientColors([gradientColors[1], gradientColors[0]])
+                      }
+                      style={{  border: 'none', fontSize: '1.5rem'}}
+                    >
+                    🔄
+                    </button>
+                  </div>
+                </label>
+              )}
+              {/* #end-section */}
+              {/* #section rotation */}
+              {colorType === 'gradient' && gradientType === 'linear' && (
+                <label>
+                  Rotation:
+                  <div style={{display: 'flex', gap: '10px'}}>
+                    <input
+                      type="range"
                       min={0}
                       max={360}
                       value={rotation}
-                      onChange={(e) => setRotation(Number(e.target.value))}
+                      onChange={(e) => {
+                        const value = Number(e.target.value)
+                        setRotation(value) // solo UI
+                        rotationRef.current = value
+                        qrCode.current.update({
+                          dotsOptions: {
+                            type: dotsStyle,
+                            gradient: {
+                              type: gradientType,
+                              rotation: (value * Math.PI) / 180,
+                              colorStops: [
+                                { offset: 0, color: gradientColors[0] },
+                                { offset: 1, color: gradientColors[1] }
+                              ]
+                            }
+                          }
+                        })
+                      }}
+                      className={style['size-input']}
                     />
-                  </label>
-                  {/* #end-section */}
-                </>
+                    <div style={{minWidth:'30px', maxWidth:'30px'}}>{rotation}°</div>
+                  </div>
+                </label>
               )}
               {/* #end-section */}
             </div>
@@ -303,7 +328,6 @@ return (
           {/* #end-section */}
         </div>
         {/* #end-section */}
-
         {/* #section display-qr-section - show the generated QR code */}
         <div className={style['display-qr-section']}>
           <div ref={qrRef}></div>
@@ -319,8 +343,8 @@ export default QRCreator
 // #end-component
 
 /** #info
- * useRef permite hacer referencia a un elemento del DOM o a un valor que persiste entre renderizados sin causar un nuevo renderizado 
- * cuando cambia. En este caso se usa para referenciar el contenedor del código QR en el DOM (ver <div ref={qrRef}></div>) y para mantener la instancia de QRCodeStyling.
- * En otras palabras, la libreria QRCodeStyling pasa a tener el control total del elemento del DOM referenciado por qrRef y puede manipularlo directamente
- * al modificar sus propiedades.
+ * Aquí `rotation` se mantiene como estado solo para mostrar en la UI,
+ * mientras que `rotationRef` guarda el valor real que se usa al actualizar el QR.
+ * El `useEffect` principal ya no depende de `rotation`, evitando renders continuos.
+ * El QR se actualiza inmediatamente en el `onChange` del slider sin causar re-render.
  */
