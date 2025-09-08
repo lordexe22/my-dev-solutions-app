@@ -2,30 +2,32 @@
 
 // #section Imports
 import { useEffect, useRef, useState } from 'react'
-import QRCodeStyling from 'qr-code-styling'
+// import QRCodeStyling from 'qr-code-styling'
 import style from './qrCreator.module.css'
 import CollapsibleContainer from '../collapsibleContainer/collapsibleContainer';
+import { qrCodeConfig } from './qrCreator.config';
+import type { DotsStylesType } from './qrCreator.d'
 // #end-section
 
 // #component QRCreator
 const QRCreator = () => {
   // #state [url, setUrl] - the URL to encode in the QR code
-  const [url, setUrl] = useState('')
+  const [url, setUrl] = useState(qrCodeConfig._options.data)
   // #end-state
   // #state [width, setWidth] - the width of the QR code
-  const [width, setWidth] = useState(250)
+  const [width, setWidth] = useState(qrCodeConfig._options.width)
   // #end-state
   // #state [height, setHeight] - the height of the QR code
-  const [height, setHeight] = useState(250)
+  const [height, setHeight] = useState(qrCodeConfig._options.height)
   // #end-state
   // #state [margin, setMargin] - the margin around the QR code
-  const [margin, setMargin] = useState(10);
+  const [margin, setMargin] = useState(qrCodeConfig._options.margin);
   // #end-state
   // #state [image, setImage] - the URL of the image to place in the center of the QR code
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState(qrCodeConfig._options.image);
   // #end-state
   // #state [dotsStyle, setDotsStyle] - the style of the dots in the QR code
-  const [dotsStyle, setDotsStyle] = useState<'square' | 'dots' | 'rounded' | 'extra-rounded' | 'classy' | 'classy-rounded'>('square');
+  const [dotsStyle, setDotsStyle] = useState<DotsStylesType>('square');
   // #end-state
   // #state [colorType, setColorType] - type of coloring (single color or gradient)
   const [colorType, setColorType] = useState<'single' | 'gradient'>('single');
@@ -48,33 +50,32 @@ const QRCreator = () => {
   // #end-variable
   // #variable qrCode - instance of QRCodeStyling to generate and manipulate the QR code
   const qrCode = useRef(
-    new QRCodeStyling({
-      width,
-      height,
-      type: "svg",
-      data: "",
-      margin, 
-      dotsOptions: {
-        color: dotsColor,
-        type: dotsStyle
-      },
-      backgroundOptions: {
-        color: "#fff"        
-      },
-      imageOptions: {
-        crossOrigin: "anonymous",
-        margin: 5
-      },
-      cornersSquareOptions:{
-        color: '000',
-        type: 'square'
-      },
-      cornersDotOptions:{
-        color: '000',
-        type: 'square'
-      }
-    })
+    qrCodeConfig
+    // new QRCodeStyling({
+
+    //   dotsOptions: {
+    //     color: dotsColor,
+    //     type: dotsStyle
+    //   },
+    //   backgroundOptions: {
+    //     color: "#fff"        
+    //   },
+    //   imageOptions: {
+    //     crossOrigin: "anonymous",
+    //     margin: 5
+    //   },
+    //   cornersSquareOptions:{
+    //     color: '000',
+    //     type: 'square'
+    //   },
+    //   cornersDotOptions:{
+    //     color: '000',
+    //     type: 'square'
+    //   },
+    
+    // })
   )
+
   // #end-variable
 
   // #variable rotationRef - mantiene el valor actual de rotación sin causar re-render
@@ -128,7 +129,7 @@ return (
             <div className={style['options-group']}>
               {/* #section URL input */}
               <label>
-                URL:
+                URL
                 <input
                   name='url-input'
                   type="text"
@@ -141,61 +142,72 @@ return (
               {/* #end-section */}
               {/* #section width input */}
               <label>
-                Width (px)
-                <input
-                  type="number"
-                  min={100}
-                  max={500}
-                  value={width}
-                  onChange={(e) => setWidth(Number(e.target.value))}
-                  className={style['size-input']}
-                  placeholder="Width"
-                />
+                Width
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
+                  <input
+                    type="range"
+                    min={100}
+                    max={350}
+                    value={width}
+                    onChange={(e) => setWidth(Number(e.target.value))}
+                    className={style['size-input']}
+                  />
+                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{width} px</div>
+                </div>
               </label>
               {/* #end-section */}
               {/* #section height input */}
               <label>
-                Height (px)
-                <input
-                  type="number"
-                  min={100}
-                  max={500}
-                  value={height}
-                  onChange={(e) => setHeight(Number(e.target.value))}
-                  className={style['size-input']}
-                  placeholder="Height"
-                />
+                Height
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
+                  <input
+                    type="range"
+                    min={100}
+                    max={350}
+                    value={height}
+                    onChange={(e) => setHeight(Number(e.target.value))}
+                    className={style['size-input']}
+                  />
+                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{height} px</div>
+                </div>
               </label>
               {/* #end-section */}
               {/* #section margin input */}
               <label>
-                Margin (px)
-                <input
-                  type="number"
-                  min={0}
-                  max={50}
-                  value={margin}
-                  onChange={(e) => setMargin(Number(e.target.value))}
-                  className={style['size-input']}
-                  placeholder="Margin"
-                />
+                Margin
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={margin}
+                    onChange={(e) => setMargin(Number(e.target.value))}
+                    className={style['size-input']}
+                  />
+                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{margin} px</div>
+                </div>
               </label>
               {/* #end-section */}
               {/* #section image input */}
               <label>
                 Center Image:
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0]
-                    if (file) {
-                      const objectUrl = URL.createObjectURL(file)
-                      setImage(objectUrl)
-                    }
-                  }}
-                  className={style['url-input']}
-                />
+                <div style={{display:'flex', }}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        const objectUrl = URL.createObjectURL(file)
+                        setImage(objectUrl)
+                      }
+                    }}
+                    className={style['url-input']}
+                  />
+                  <button 
+                    onClick={() => setImage(undefined)}
+                  >remove</button>
+                </div>
               </label>
               {/* #end-section */}
             </div>
@@ -326,6 +338,9 @@ return (
             </div>
           </CollapsibleContainer>
           {/* #end-section */}
+          {/* #section Corner Square Options */}
+        
+          {/* #end-section */}
         </div>
         {/* #end-section */}
         {/* #section display-qr-section - show the generated QR code */}
@@ -334,6 +349,7 @@ return (
           <button>Download SVG</button>
         </div>
         {/* #end-section */}
+
       </div>
     </>
   )
