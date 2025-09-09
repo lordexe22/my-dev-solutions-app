@@ -15,9 +15,16 @@ export const qrCodeConfig = new QRCodeStyling({
   // #section dotsOptions
   dotsOptions:{
     type: "square",
-    color: '#ff0000',
-    roundSize: undefined,
+    color: '#000000',
+    roundSize: undefined, // deprecated in the qr-code-styling library
     gradient: undefined
   },
+  // #end-section
+  // #section cornersSquareOptions
+  cornersSquareOptions:{
+    color:'#000',
+    gradient: undefined,
+    type: "square"
+  }
   // #end-section
 })

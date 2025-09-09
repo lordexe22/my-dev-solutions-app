@@ -1,130 +1,48 @@
 // src\modules\qrCreator\qrCreator.tsx
 
 // #section Imports
-import { useEffect, useRef, useState } from 'react'
-// import QRCodeStyling from 'qr-code-styling'
+// import { useEffect, useRef, useState } from 'react'
 import style from './qrCreator.module.css'
 import CollapsibleContainer from '../collapsibleContainer/collapsibleContainer';
-import { qrCodeConfig } from './qrCreator.config';
-import type { DotsStylesType } from './qrCreator.d'
+import { useQRCreator } from './qrCreator.hooks';
 // #end-section
 
 // #component QRCreator
 const QRCreator = () => {
-  // #state [url, setUrl] - the URL to encode in the QR code
-  const [url, setUrl] = useState(qrCodeConfig._options.data)
-  // #end-state
-  // #state [width, setWidth] - the width of the QR code
-  const [width, setWidth] = useState(qrCodeConfig._options.width)
-  // #end-state
-  // #state [height, setHeight] - the height of the QR code
-  const [height, setHeight] = useState(qrCodeConfig._options.height)
-  // #end-state
-  // #state [margin, setMargin] - the margin around the QR code
-  const [margin, setMargin] = useState(qrCodeConfig._options.margin);
-  // #end-state
-  // #state [image, setImage] - the URL of the image to place in the center of the QR code
-  const [image, setImage] = useState(qrCodeConfig._options.image);
-  // #end-state
-  // #state [dotsStyle, setDotsStyle] - the style of the dots in the QR code
-  const [dotsStyle, setDotsStyle] = useState<DotsStylesType>('square');
-  // #end-state
-  // #state [colorType, setColorType] - type of coloring (single color or gradient)
-  const [colorType, setColorType] = useState<'single' | 'gradient'>('single');
-  // #end-state
-  // #state [dotsColor, setDotsColor] - the single color for the dots
-  const [dotsColor, setDotsColor] = useState('#000000');
-  // #end-state
-  // #state [gradientType, setGradientType] - type of gradient (linear or radial)
-  const [gradientType, setGradientType] = useState<'linear' | 'radial'>('linear');
-  // #end-state
-  // #state [gradientColors, setGradientColors] - two colors for the gradient
-  const [gradientColors, setGradientColors] = useState<[string, string]>(['#000000', '#ff0000']);
-  // #end-state
-  // #state [rotation, setRotation] - rotation of the gradient (solo para UI, no afecta re-render)
-  const [rotation, setRotation] = useState(0);
-  // #end-state
 
-  // #variable qrRef - reference to the div element where the QR code will be rendered by using qr-code-styling library
-  const qrRef = useRef<HTMLDivElement | null>(null)
-  // #end-variable
-  // #variable qrCode - instance of QRCodeStyling to generate and manipulate the QR code
-  const qrCode = useRef(
-    qrCodeConfig
-    // new QRCodeStyling({
+  // #hook useQRCreator
+  const {
+    url, setUrl,
+    width, setWidth,
+    height, setHeight,
+    margin, setMargin,
+    setImage,
+    dotsStyle, setDotsStyle,
+    colorType, setColorType,
+    dotsColor, setDotsColor,
+    gradientType, setGradientType,
+    gradientColors, setGradientColors,
+    rotation, setRotation,
+    cornersSquareStyle, setCornersSquareStyle,
+    cornersSquareColor, setCornersSquareColor,
+    cornersSquareColorType, setCornersSquareColorType,
+    cornersSquareGradientType, setCornersSquareGradientType,
+    cornersSquareGradientColors, setCornersSquareGradientColors,
+    cornersSquareRotation, setCornersSquareRotation,
+    cornerSquareRotationRef,
+    qrRef,
+    qrCode,
+    rotationRef,
+  } = useQRCreator()
+  // #end-hook
 
-    //   dotsOptions: {
-    //     color: dotsColor,
-    //     type: dotsStyle
-    //   },
-    //   backgroundOptions: {
-    //     color: "#fff"        
-    //   },
-    //   imageOptions: {
-    //     crossOrigin: "anonymous",
-    //     margin: 5
-    //   },
-    //   cornersSquareOptions:{
-    //     color: '000',
-    //     type: 'square'
-    //   },
-    //   cornersDotOptions:{
-    //     color: '000',
-    //     type: 'square'
-    //   },
-    
-    // })
-  )
 
-  // #end-variable
-
-  // #variable rotationRef - mantiene el valor actual de rotación sin causar re-render
-  const rotationRef = useRef(0);
-  // #end-variable
-  
-  useEffect(() => {
-    if (qrRef.current) {
-      qrCode.current.append(qrRef.current)
-    }
-  }, [])
-
-  useEffect(() => {
-    const dotsOptions: Record<string, unknown> = {
-      type: dotsStyle,
-      gradient: undefined,
-      color: undefined
-    }
-
-    if (colorType === 'single') {
-      dotsOptions.color = dotsColor
-    } else {
-      dotsOptions.gradient = {
-        type: gradientType,
-        rotation: (rotationRef.current * Math.PI) / 180,
-        colorStops: [
-          { offset: 0, color: gradientColors[0] },
-          { offset: 1, color: gradientColors[1] }
-        ]
-      }
-    }
-
-    qrCode.current.update({
-      data: url,
-      width,
-      height,
-      margin,
-      image: image || undefined,
-      dotsOptions
-    })
-  }, [url, width, height, margin, image, dotsStyle, colorType, dotsColor, gradientType, gradientColors])
-  // 👆 rotation eliminado de dependencias para que no fuerce renderizado continuo
-
-return (
+  return (
     <>
       <div className={style.container}>
-        {/* #section options-menu - show the configuration options */}
+        {/* #section options-menu */}
         <div className={style['options-menu']}>
-          {/* #section Basic Options - basic configuration options for the QR code */}
+          {/* #section Basic Options */}
           <CollapsibleContainer title="Basic Options">
             <div className={style['options-group']}>
               {/* #section URL input */}
@@ -213,7 +131,7 @@ return (
             </div>
           </CollapsibleContainer>
           {/* #end-section */}
-          {/* #section Dots Options - style configuration options for the QR code dots */}
+          {/* #section Dots Options */}
           <CollapsibleContainer title="Dots Options">
             <div className={style['options-group']}>
               {/* #section dots style */}
@@ -338,29 +256,169 @@ return (
             </div>
           </CollapsibleContainer>
           {/* #end-section */}
-          {/* #section Corner Square Options */}
-        
+          {/* #section Corners Square Options */}
+          <CollapsibleContainer title="Corners Square Options">
+            <div className={style['options-group']}>
+              {/* #section corners square style */}
+              <label>
+                Corner Square Style:
+                <select
+                  value={cornersSquareStyle}
+                  onChange={(e) =>
+                    setCornersSquareStyle(
+                      e.target.value as
+                        | 'square'
+                        | 'dot'
+                        | 'extra-rounded'
+                        | 'classy'
+                        | 'classy-rounded'
+                    )
+                  }
+                >
+                  <option value="square">Square</option>
+                  <option value="dot">Dot</option>
+                  <option value="extra-rounded">Extra rounded</option>
+                  <option value="classy">Classy</option>
+                  <option value="classy-rounded">Classy rounded</option>
+                </select>
+              </label>
+              {/* #end-section */}
+              {/* #section color type */}
+              <label>
+                Color Type:
+                <select
+                  value={cornersSquareColorType}
+                  onChange={(e) =>
+                    setCornersSquareColorType(e.target.value as 'single' | 'gradient')
+                  }
+                >
+                  <option value="single">Single Color</option>
+                  <option value="gradient">Color Gradient</option>
+                </select>
+              </label>
+              {/* #end-section */}
+              {/* #section single color */}
+              {cornersSquareColorType === 'single' && (
+                <label>
+                  Corner Square Color:
+                  <input
+                    type="color"
+                    value={cornersSquareColor}
+                    onChange={(e) => setCornersSquareColor(e.target.value)}
+                  />
+                </label>
+              )}
+              {/* #end-section */}
+              {/* #section gradient type */}
+              {cornersSquareColorType === 'gradient' && (
+                <label>
+                  Gradient type:
+                  <select
+                    value={cornersSquareGradientType}
+                    onChange={(e) =>
+                      setCornersSquareGradientType(e.target.value as 'linear' | 'radial')
+                    }
+                  >
+                    <option value="linear">Linear</option>
+                    <option value="radial">Radial</option>
+                  </select>
+                </label>
+              )}
+              {/* #end-section */}
+              {/* #section gradient colors */}
+              {cornersSquareColorType === 'gradient' && (
+                <label>
+                  Gradient colors:
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                    <input
+                      type="color"
+                      value={cornersSquareGradientColors[0]}
+                      onChange={(e) =>
+                        setCornersSquareGradientColors([
+                          e.target.value,
+                          cornersSquareGradientColors[1],
+                        ])
+                      }
+                    />
+                    <input
+                      type="color"
+                      value={cornersSquareGradientColors[1]}
+                      onChange={(e) =>
+                        setCornersSquareGradientColors([
+                          cornersSquareGradientColors[0],
+                          e.target.value,
+                        ])
+                      }
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setCornersSquareGradientColors([
+                          cornersSquareGradientColors[1],
+                          cornersSquareGradientColors[0],
+                        ])
+                      }
+                      style={{ border: 'none', fontSize: '1.5rem' }}
+                    >
+                      🔄
+                    </button>
+                  </div>
+                </label>
+              )}
+              {/* #end-section */}
+              {/* #section rotation */}
+              {cornersSquareColorType === 'gradient' &&
+                cornersSquareGradientType === 'linear' && (
+                  <label>
+                    Rotation:
+                    <div style={{ display: 'flex', gap: '10px' }}>
+                      <input
+                        type="range"
+                        min={0}
+                        max={360}
+                        value={cornersSquareRotation}
+                        onChange={(e) => {
+                          const value = Number(e.target.value)
+                          setCornersSquareRotation(value)
+                          cornerSquareRotationRef.current = value
+                          qrCode.current.update({
+                            cornersSquareOptions: {
+                              type: cornersSquareStyle,
+                              gradient: {
+                                type: cornersSquareGradientType,
+                                rotation: (value * Math.PI) / 180,
+                                colorStops: [
+                                  { offset: 0, color: cornersSquareGradientColors[0] },
+                                  { offset: 1, color: cornersSquareGradientColors[1] },
+                                ],
+                              },
+                            },
+                          })
+                        }}
+                        className={style['size-input']}
+                      />
+                      <div style={{ minWidth: '30px', maxWidth: '30px' }}>
+                        {cornersSquareRotation}°
+                      </div>
+                    </div>
+                  </label>
+                )}
+              {/* #end-section */}
+            </div>
+          </CollapsibleContainer>
           {/* #end-section */}
+
         </div>
         {/* #end-section */}
-        {/* #section display-qr-section - show the generated QR code */}
+        {/* #section display-qr-section */}
         <div className={style['display-qr-section']}>
           <div ref={qrRef}></div>
           <button>Download SVG</button>
         </div>
         {/* #end-section */}
-
       </div>
     </>
   )
-
 }
 export default QRCreator
 // #end-component
-
-/** #info
- * Aquí `rotation` se mantiene como estado solo para mostrar en la UI,
- * mientras que `rotationRef` guarda el valor real que se usa al actualizar el QR.
- * El `useEffect` principal ya no depende de `rotation`, evitando renders continuos.
- * El QR se actualiza inmediatamente en el `onChange` del slider sin causar re-render.
- */
