@@ -1,30 +1,32 @@
 // src\modules\qrCreator\qrCreator.config.ts
 
-import QRCodeStyling from "qr-code-styling"
+import QRCodeStyling from 'qr-code-styling'
+import type { Options } from 'qr-code-styling';
 
-
-export const qrCodeConfig = new QRCodeStyling({
-  // #section basicOptions
-  width: 200,
-  height: 200,
-  type: "svg", // 'canvas' | 'svg'
-  margin: 0,
-  data: undefined,
-  image: undefined,
-  // #end-section
-  // #section dotsOptions
+export const defaultConfigOptions: Options = {
+  type: 'svg', // 'canvas' | 'svg'
+  shape: 'square', // 'square' | 'circle'
+  width: 250,
+  height: 250,
+  margin: 10,
+  data: undefined, // empty input
+  image: undefined, // no image
   dotsOptions:{
-    type: "square",
-    color: '#000000',
-    roundSize: undefined, // deprecated in the qr-code-styling library
-    gradient: undefined
-  },
-  // #end-section
-  // #section cornersSquareOptions
-  cornersSquareOptions:{
-    color:'#000',
+    type: 'square',
+    color: 'black',
     gradient: undefined,
-    type: "square"
+    roundSize: undefined
+  },
+  cornersSquareOptions: {
+    type: 'square',
+    color: 'black',
+    gradient: undefined
   }
-  // #end-section
-})
+}
+
+export const defaultCustomConfigOptions = {
+  colorStyle: 'single'
+}
+
+/** qrCode */
+export const qrCode = new QRCodeStyling(defaultConfigOptions);

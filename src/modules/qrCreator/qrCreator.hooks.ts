@@ -1,189 +1,175 @@
-// src\modules\qrCreator\qrCreator.hooks.ts
-// #section Imports
-import { useEffect, useRef, useState } from 'react'
-import { qrCodeConfig } from './qrCreator.config'
-import type { DotsStylesType } from './qrCreator.d'
-// #end-section
-// #hook useQRCreator 
-export const useQRCreator = () => {
-  // #state list
-  // #state [url, setUrl] - basicOption
-  const [url, setUrl] = useState(qrCodeConfig._options.data)
-  // #end-state
-  // #state [width, setWidth] - basicOption
-  const [width, setWidth] = useState(qrCodeConfig._options.width)
-  // #end-state
-  // #state [height, setHeight] - basicOption
-  const [height, setHeight] = useState(qrCodeConfig._options.height)
-  // #end-state
-  // #state [margin, setMargin] - basicOption
-  const [margin, setMargin] = useState(qrCodeConfig._options.margin)
-  // #end-state
-  // #state [image, setImage] - basicOption
-  const [image, setImage] = useState(qrCodeConfig._options.image)
-  // #end-state
+import { useEffect, useRef, useState, type RefObject } from 'react'
+import { qrCode } from './qrCreator.config';
+import type { ColorType } from './qrCreator.d'
+import type { DotType, GradientType, Gradient, CornerSquareType } from 'qr-code-styling';
 
-  // #state [dotsStyle, setDotsStyle] - dotsOptions
-  const [dotsStyle, setDotsStyle] = useState<DotsStylesType>(qrCodeConfig._options.dotsOptions.type)
-  // #end-state
-  // #state [dotsColor, setDotsColor] - dotsOptions
-  const [dotsColor, setDotsColor] = useState(qrCodeConfig._options.dotsOptions.color)
-  // #end-state
-  // #state [colorType, setColorType] - dotsOptions
-  const [colorType, setColorType] = useState<'single' | 'gradient'>('single')
-  // #end-state
-  // #state [gradientType, setGradientType] - dotsOptions
-  const [gradientType, setGradientType] = useState<'linear' | 'radial'>('linear')
-  // #end-state
-  // #state [gradientColors, setGradientColors] - dotsOptions
-  const [gradientColors, setGradientColors] = useState<[string, string]>(['#000000', '#ff0000'])
-  // #end-state
-  // #state [rotation, setRotation] - dotsOptions
-  const [rotation, setRotation] = useState(0)
-  // #end-state
+// #hook useQRContainerRef
+/**
+ * Create and manage a reference for the DOM element that will contain the QR code.
+ *
+ * This hook initializes a container reference and appends the QR code when the component mounts.
+ * It is required for updating or re-rendering the QR code when its data or styles change.
+ *
+ * @returns {{
+ *   qrContainerRef: RefObject<HTMLDivElement>
+ * }} A reference to the QR code container element.
+ */
+export const useQRContainerRef = () => {
+  const qrContainerRef = useRef<HTMLDivElement>(null)
 
-  // #state [cornersSquareStyle, setCornersSquareStyle] - cornersSquareOptions
-  const [cornersSquareStyle, setCornersSquareStyle] = useState(qrCodeConfig._options.cornersSquareOptions?.type)
-  // #end-state
-  // #state [cornersSquareColor, setCornersSquareColor] - cornersSquareOptions
-  const [cornersSquareColor, setCornersSquareColor] = useState(qrCodeConfig._options.cornersSquareOptions?.color)
-  // #end-state
-  // #state [cornersSquareColorType, setCornersSquareColorType] - cornersSquareOptions
-  const [cornersSquareColorType, setCornersSquareColorType] = useState<'single' | 'gradient'>('single')
-  // #end-state
-  // #state [cornersSquareGradientType, setCornersSquareGradientType] - cornersSquareOptions
-  const [cornersSquareGradientType, setCornersSquareGradientType] = useState<'linear' | 'radial'>('linear')
-  // #end-state
-  // #state [cornersSquareGradientColors, setCornersSquareGradientColors] - cornersSquareOptions
-  const [cornersSquareGradientColors, setCornersSquareGradientColors] = useState<[string, string]>(['#000000', '#ff0000'])
-  // #end-state
-  // #state [cornersSquareRotation, setCornersSquareRotation] - cornersSquareOptions
-  const [cornersSquareRotation, setCornersSquareRotation] = useState(0)
-  // #end-state
-  // #end-state
-  
-  // #variable list
-  // #variable qrRef
-  const qrRef = useRef<HTMLDivElement | null>(null)
-  // #end-variable
-  // #variable qrCode
-  const qrCode = useRef(qrCodeConfig)
-  // #end-variable
-  // #variable rotationRef
-  const rotationRef = useRef(0)
-  // #end-variable
-  // #variable cornerSquareRotationRef
-  const cornerSquareRotationRef = useRef(0)
-  // #end-variable
-  // #end-variable
-
-  // #function list
-  // #function attachQRCodeToDOM
-  const attachQRCodeToDOM = () => {
-    if (qrRef.current) {
-      qrCode.current.append(qrRef.current)
+  useEffect(() => {
+    if (qrContainerRef.current) {
+      qrContainerRef.current.innerHTML = ''
+      qrCode.append(qrContainerRef.current)
     }
+  }, [])
+
+  return {
+    qrContainerRef
   }
-  // #end-function
-  // #function updateCommonQRCodeData 
-  const updateCommonQRCodeData = () => {
-    qrCode.current.update({
-      data: url,
+}
+// #end-hook
+// #hook useBasicOptions
+/**
+ * Manage the basic options for the QR code: data, width, height, and margin.
+ *
+ * This hook exposes state setters for each option and automatically re-renders
+ * the QR code inside the provided container when any of them change.
+ *
+ * @param {Object} params
+ * @param {RefObject<HTMLDivElement | null>} params.qrContainerRef - Reference to the container where the QR code will be rendered.
+ *
+ * @returns {{
+ *   data: string | undefined,
+ *   setData: Dispatch<SetStateAction<string | undefined>>,
+ *   width: number,
+ *   setWidth: Dispatch<SetStateAction<number>>,
+ *   height: number,
+ *   setHeight: Dispatch<SetStateAction<number>>,
+ *   margin: number,
+ *   setMargin: Dispatch<SetStateAction<number>>
+ * }} The current QR options and their setters.
+ */
+export const useBasicOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  const [data, setData] = useState<string | undefined>(qrCode._options.data);
+  const [width, setWidth] = useState<number>(qrCode._options.width);
+  const [height, setHeight] = useState<number>(qrCode._options.height);
+  const [margin, setMargin] = useState<number>(qrCode._options.margin);
+
+  useEffect(() => {
+    if (!qrContainerRef.current) return
+
+    qrContainerRef.current.innerHTML = '' // limpiar contenedor
+
+    qrCode.update?.({
+      data,
       width,
       height,
       margin,
-      image: image || undefined
     })
-  }
-  // #end-function
-  // #function updateDotsOptionsQRCodeData
-  const updateDotsOptionsQRCodeData = () => {
-    const dotsOptions: Record<string, unknown> = {
-      type: dotsStyle,
-      color: colorType === 'single' ? dotsColor : undefined,
-      roundSize: qrCodeConfig._options.dotsOptions.roundSize,
-      gradient: undefined
-    }
-    if (colorType === 'gradient') {
-      dotsOptions.gradient = {
-        type: gradientType,
-        rotation: (rotationRef.current * Math.PI) / 180,
-        colorStops: [
-          { offset: 0, color: gradientColors[0] },
-          { offset: 1, color: gradientColors[1] }
-        ]
-      }
-    }
-    qrCode.current.update({ dotsOptions })
-  }
-  // #end-function
-  // #function updateCornerSquareQRCodeData
-  const updateCornerSquareQRCodeData = () => {
-    const cornersSquareOptions: Record<string, unknown> = {
-      type: cornersSquareStyle,
-      color: cornersSquareColor,
-      gradient: undefined
-    }
-    if(cornersSquareColorType === 'gradient'){
-      cornersSquareOptions.gradient = {
-        type: cornersSquareGradientType,
-        rotation: (cornerSquareRotationRef.current * Math.PI) / 180,
-        colorStops: [
-          { offset: 0, color: cornersSquareGradientColors[0]},
-          { offset: 1, color: cornersSquareGradientColors[1]},
-        ]
-      }
-    }
-    qrCode.current.update({ cornersSquareOptions })
-  }
-  // #end-function
 
-  // #event - useEffect list
-  useEffect(attachQRCodeToDOM, [])
-  useEffect(updateCommonQRCodeData, [width, height, margin, image, url])
-  useEffect(updateDotsOptionsQRCodeData, [dotsStyle, colorType, dotsColor, gradientType, gradientColors])
-  useEffect(updateCornerSquareQRCodeData, [cornersSquareStyle, cornersSquareColor, cornersSquareColorType, cornersSquareGradientType, cornersSquareGradientColors])
-  // #end-event
-  // #section return
+    qrCode.append(qrContainerRef.current) // renderizar QR
+  }, [data, width, height, margin, qrContainerRef])
+
   return {
-    url,
-    setUrl,
-    width,
-    setWidth,
-    height,
-    setHeight,
-    margin,
-    setMargin,
-    setImage,
-    dotsStyle,
-    setDotsStyle,
-    colorType,
-    setColorType,
-    dotsColor,
-    setDotsColor,
-    gradientType,
-    setGradientType,
-    gradientColors,
-    setGradientColors,
-    rotation,
-    setRotation,
-    cornersSquareStyle,
-    setCornersSquareStyle,
-    cornersSquareColor,
-    setCornersSquareColor,
-    cornersSquareColorType,
-    setCornersSquareColorType,
-    cornersSquareGradientType,
-    setCornersSquareGradientType,
-    cornersSquareGradientColors,
-    setCornersSquareGradientColors,
-    cornersSquareRotation,
-    setCornersSquareRotation,
-    cornerSquareRotationRef,
-    qrRef,
-    qrCode,
-    rotationRef
+    data, setData,
+    width, setWidth,
+    height, setHeight,
+    margin, setMargin
   }
-  // #end-section
 }
 // #end-hook
+// #hook useDotsOptions
+export const useDotsOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  const [dotType, setDotType] = useState<DotType>(qrCode._options.dotsOptions.type)
+  const [colorType, setColorType] = useState<ColorType>('single')
+  const [dotColor, setDotColor] = useState<string>(qrCode._options.dotsOptions.color)
+  const [gradientType, setGradientType] = useState<GradientType>('linear')
+  const [gradientColors, setGradientColors] = useState<string[]>(['#000000', '#008000'])
+
+  useEffect(() => {
+    if (!qrContainerRef.current) return
+
+    qrContainerRef.current.innerHTML = '' // limpiar contenedor
+
+    const dotsOptions: Partial<typeof qrCode._options.dotsOptions> = { type: dotType }
+
+    if (colorType === 'single') {
+      dotsOptions.color = dotColor
+      dotsOptions.gradient = undefined // limpiar gradiente si existía
+    } else if (colorType === 'gradient') {
+      const gradient: Gradient = {
+        type: gradientType,
+        colorStops: gradientColors.map((color, index) => ({
+          offset: index / (gradientColors.length - 1),
+          color
+        }))
+      }
+      dotsOptions.gradient = gradient
+      dotsOptions.color = undefined // limpiar color plano si existía
+    }
+
+    qrCode.update?.({ dotsOptions })
+    qrCode.append(qrContainerRef.current)
+  }, [dotType, colorType, dotColor, gradientType, gradientColors, qrContainerRef])
+
+  return {
+    dotType, setDotType,
+    colorType, setColorType,
+    dotColor, setDotColor,
+    gradientType, setGradientType,
+    gradientColors, setGradientColors
+  }
+}
+
+// #end-hook
+// #hook useCornersSquareOptions
+export const useCornersSquareOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  const [CSType, setCSType] = useState<CornerSquareType | 'none'>(
+    qrCode._options.cornersSquareOptions?.type || 'square'
+  )
+  const [CSColorType, setCSColorType] = useState<ColorType>('single') 
+  const [CSColor, setCSColor] = useState<string>(qrCode._options.cornersSquareOptions?.color || '#000000')
+  const [CSGradientType, setCSGradientType] = useState<'linear' | 'radial'>('linear')
+  const [CSGradientColors, setCSGradientColors] = useState<string[]>(['#000000', '#008000'])
+
+  useEffect(() => {
+    if (!qrContainerRef.current) return
+
+    qrContainerRef.current.innerHTML = '' // limpiar contenedor
+
+    const cornersOptions = qrCode._options.cornersSquareOptions ? { ...qrCode._options.cornersSquareOptions } : {}
+
+    // Tipo de corner
+    cornersOptions.type = CSType === 'none' ? undefined : CSType
+
+    // Color
+    if (CSColorType === 'single') {
+      cornersOptions.color = CSColor
+      cornersOptions.gradient = undefined
+    } else if (CSColorType === 'gradient') {
+      cornersOptions.gradient = {
+        type: CSGradientType,
+        colorStops: CSGradientColors.map((color, index) => ({
+          offset: index / (CSGradientColors.length - 1),
+          color
+        }))
+      }
+      cornersOptions.color = undefined
+    }
+
+    qrCode.update?.({ cornersSquareOptions: cornersOptions })
+    qrCode.append(qrContainerRef.current)
+  }, [CSType, CSColorType, CSColor, CSGradientType, CSGradientColors, qrContainerRef])
+
+  return {
+    CSType, setCSType, 
+    CSColorType, setCSColorType, 
+    CSColor, setCSColor, 
+    CSGradientType, setCSGradientType, 
+    CSGradientColors, setCSGradientColors
+  }
+}
+// #end-hook
+
+

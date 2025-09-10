@@ -1,424 +1,300 @@
-// src\modules\qrCreator\qrCreator.tsx
 
-// #section Imports
-// import { useEffect, useRef, useState } from 'react'
 import style from './qrCreator.module.css'
-import CollapsibleContainer from '../collapsibleContainer/collapsibleContainer';
-import { useQRCreator } from './qrCreator.hooks';
-// #end-section
+import Collapsible from '../collapsibleContainer/collapsibleContainer'
+import { useQRContainerRef, useBasicOptions, useDotsOptions, useCornersSquareOptions } from './qrCreator.hooks'
+import type { DotType, GradientType } from 'qr-code-styling'
+import type { ColorType } from './qrCreator.d'
 
-// #component QRCreator
 const QRCreator = () => {
 
-  // #hook useQRCreator
+  // #hook useQRContainerRef
+  const {qrContainerRef} = useQRContainerRef()
+  // #end-hook
+  // #hook useBasicOptions
   const {
-    url, setUrl,
+    data, setData,
     width, setWidth,
     height, setHeight,
-    margin, setMargin,
-    setImage,
-    dotsStyle, setDotsStyle,
+    margin, setMargin
+  } = useBasicOptions({ qrContainerRef });
+  // #end-hook
+  // #hook useDotsOptions
+  const {
+    dotType, setDotType,
     colorType, setColorType,
-    dotsColor, setDotsColor,
+    dotColor, setDotColor,
     gradientType, setGradientType,
-    gradientColors, setGradientColors,
-    rotation, setRotation,
-    cornersSquareStyle, setCornersSquareStyle,
-    cornersSquareColor, setCornersSquareColor,
-    cornersSquareColorType, setCornersSquareColorType,
-    cornersSquareGradientType, setCornersSquareGradientType,
-    cornersSquareGradientColors, setCornersSquareGradientColors,
-    cornersSquareRotation, setCornersSquareRotation,
-    cornerSquareRotationRef,
-    qrRef,
-    qrCode,
-    rotationRef,
-  } = useQRCreator()
+    gradientColors, setGradientColors
+  } = useDotsOptions({ qrContainerRef });
+  // #end-hook
+  // #hook useCornersSquareOptions
+  const {
+    CSType, setCSType, 
+    CSColorType, setCSColorType, 
+    CSColor, setCSColor, 
+    CSGradientType, setCSGradientType, 
+    CSGradientColors, setCSGradientColors
+  } = useCornersSquareOptions({qrContainerRef})
   // #end-hook
 
 
-  return (
-    <>
-      <div className={style.container}>
-        {/* #section options-menu */}
-        <div className={style['options-menu']}>
-          {/* #section Basic Options */}
-          <CollapsibleContainer title="Basic Options">
-            <div className={style['options-group']}>
-              {/* #section URL input */}
-              <label>
-                URL
-                <input
-                  name='url-input'
-                  type="text"
-                  placeholder="Enter URL"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  className={style['url-input']}
-                />
-              </label>
-              {/* #end-section */}
-              {/* #section width input */}
-              <label>
-                Width
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
-                  <input
-                    type="range"
-                    min={100}
-                    max={350}
-                    value={width}
-                    onChange={(e) => setWidth(Number(e.target.value))}
-                    className={style['size-input']}
-                  />
-                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{width} px</div>
-                </div>
-              </label>
-              {/* #end-section */}
-              {/* #section height input */}
-              <label>
-                Height
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
-                  <input
-                    type="range"
-                    min={100}
-                    max={350}
-                    value={height}
-                    onChange={(e) => setHeight(Number(e.target.value))}
-                    className={style['size-input']}
-                  />
-                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{height} px</div>
-                </div>
-              </label>
-              {/* #end-section */}
-              {/* #section margin input */}
-              <label>
-                Margin
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', justifyContent: 'space-around' }}>
-                  <input
-                    type="range"
-                    min={0}
-                    max={100}
-                    value={margin}
-                    onChange={(e) => setMargin(Number(e.target.value))}
-                    className={style['size-input']}
-                  />
-                  <div style={{ minWidth: '40px', textAlign: 'right' }}>{margin} px</div>
-                </div>
-              </label>
-              {/* #end-section */}
-              {/* #section image input */}
-              <label>
-                Center Image:
-                <div style={{display:'flex', }}>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0]
-                      if (file) {
-                        const objectUrl = URL.createObjectURL(file)
-                        setImage(objectUrl)
-                      }
-                    }}
-                    className={style['url-input']}
-                  />
-                  <button 
-                    onClick={() => setImage(undefined)}
-                  >remove</button>
-                </div>
-              </label>
-              {/* #end-section */}
+  // #section return
+  return(
+    <div className={style['qr-creator-container']}>
+      {/* #section qr-options */}
+      <div className={style['qr-options']}>
+        {/* #section basic-options */}
+        <Collapsible title='Basic options'>
+          <div className={style['section-container']}>
+            {/* #section Data */}
+            <span className={style['input-label']}>Data</span>
+            <div className={style['input-wrapper']}>
+              <input 
+                type="text" 
+                value={data}
+                onChange={(e)=>{setData(e.target.value || undefined)}}
+              />
             </div>
-          </CollapsibleContainer>
-          {/* #end-section */}
-          {/* #section Dots Options */}
-          <CollapsibleContainer title="Dots Options">
-            <div className={style['options-group']}>
-              {/* #section dots style */}
-              <label>
-                Dots Style:
-                <select
-                  value={dotsStyle}
-                  onChange={(e) => setDotsStyle(e.target.value as 'square' | 'dots' | 'rounded' | 'extra-rounded' | 'classy' | 'classy-rounded')}
-                >
-                  <option value="square">Square</option>
-                  <option value="dots">Dots</option>
-                  <option value="rounded">Rounded</option>
-                  <option value="extra-rounded">Extra rounded</option>
-                  <option value="classy">Classy</option>
-                  <option value="classy-rounded">Classy rounded</option>
-                </select>
-              </label>
-              {/* #end-section */}
-              {/* #section color type */}
-              <label>
-                Color Type:
-                <select
-                  value={colorType}
-                  onChange={(e) => setColorType(e.target.value as 'single' | 'gradient')}
-                >
-                  <option value="single">Single Color</option>
-                  <option value="gradient">Color Gradient</option>
-                </select>
-              </label>
-              {/* #end-section */}
-              {/* #section dots color */}
-              {colorType === 'single' && (
-                <>
-                  <label>
-                    Dots Color:
-                    <input
-                      type="color"
-                      value={dotsColor}
-                      onChange={(e) => setDotsColor(e.target.value)}
-                    />
-                  </label>
-                </>
-              )}
-              {/* #end-section */}
-              {/* #section gradient type */}
-              {colorType === 'gradient' && (
-                <label>
-                  Gradient type:
-                  <select
+            {/* #end-section */}
+            {/* #section Width */}
+            <span className={style['input-label']}>Width</span>
+            <div className={style['input-wrapper']}>
+              <input 
+                type="range" 
+                value={width}
+                min={100}
+                max={500}
+                onChange={(e)=>{setWidth(Number(e.target.value))}}
+              />
+              <span className={style['input-value']}>{width} px</span>
+            </div>
+            {/* #end-section */}
+            {/* #section Height */}
+            <span className={style['input-label']}>Height</span>
+            <div className={style['input-wrapper']}>
+              <input 
+                type="range" 
+                value={height}
+                min={100}
+                max={500}
+                onChange={(e)=>{setHeight(Number(e.target.value))}}
+              />
+              <span className={style['input-value']}>{height} px</span>
+            </div>
+            {/* #end-section */}
+            {/* #section Margin */}
+            <span className={style['input-label']}>Margin</span>
+            <div className={style['input-wrapper']}>
+              <input 
+                type="range"
+                value={margin}
+                min={0}
+                max={100}
+                onChange={(e)=>{setMargin(Number(e.target.value))}}                
+              />
+              <span className={style['input-value']}>{margin} px</span>
+            </div>
+            {/* #end-section */}
+          </div>
+        </Collapsible>
+        {/* #end-section */}
+        {/* #section dots-options */}
+        <Collapsible title='Dots options'>
+          <div className={style['section-container']}>
+            {/* #section dots-type */}
+            <span className={style['input-label']}>Dots Type</span>
+            <div className={style['input-wrapper']}>
+              <select 
+                onChange={(e)=>{setDotType(e.target.value as DotType)}}
+                value={dotType}
+              >
+                <option value="square" defaultChecked>square</option>
+                <option value="dots">dots</option>
+                <option value="rounded">rounded</option>
+                <option value="extra-rounded">extra-rounded</option>
+                <option value="classy">classy</option>
+                <option value="classy-rounded">classy-rounded</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section color-type */}
+            <span className={style['input-label']}>Color Type</span>
+            <div className={style['input-wrapper']}>
+              <select 
+                onChange={(e)=>{setColorType(e.target.value as ColorType)}}
+                value={colorType}
+              >
+                <option value="single" defaultChecked>single</option>
+                <option value="gradient">gradient</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section dot-color */}
+            {colorType === 'single' && 
+              <>
+                <span className={style['input-label']}>Color</span>
+                <div className={style['input-wrapper']}>
+                  <input 
+                    type="color" 
+                    value={dotColor}
+                    onChange={(e)=>{setDotColor(e.target.value)}}
+                  />
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section gradient-type */}
+            {colorType === 'gradient' && 
+              <>
+                <span className={style['input-label']}>Gradient Type</span>
+                <div className={style['input-wrapper']}>
+                  <select 
+                    onChange={(e)=>{setGradientType(e.target.value as GradientType)}}
                     value={gradientType}
-                    onChange={(e) => setGradientType(e.target.value as 'linear' | 'radial')}
                   >
-                    <option value="linear">Linear</option>
-                    <option value="radial">Radial</option>
+                    <option value="linear" defaultChecked>linear</option>
+                    <option value="radial">radial</option>
                   </select>
-                </label> 
-              )}
-              {/* #end-section */}
-              {/* #section dots color */}
-              {colorType === 'gradient' && (
-                <label>
-                  Dots colors:
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <input
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section gradient-colors */}
+            {colorType === 'gradient' && 
+              <>
+                <span className={style['input-label']}>Gradient Colors</span>
+                <div className={style['input-wrapper']}>
+                  {gradientColors.map((color, index) => (
+                    <input 
+                      key={index}
                       type="color"
-                      value={gradientColors[0]}
-                      onChange={(e) => setGradientColors([e.target.value, gradientColors[1]])}
-                    />
-                    <input
-                      type="color"
-                      value={gradientColors[1]}
-                      onChange={(e) => setGradientColors([gradientColors[0], e.target.value])}
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setGradientColors([gradientColors[1], gradientColors[0]])
-                      }
-                      style={{  border: 'none', fontSize: '1.5rem'}}
-                    >
-                    🔄
-                    </button>
-                  </div>
-                </label>
-              )}
-              {/* #end-section */}
-              {/* #section rotation */}
-              {colorType === 'gradient' && gradientType === 'linear' && (
-                <label>
-                  Rotation:
-                  <div style={{display: 'flex', gap: '10px'}}>
-                    <input
-                      type="range"
-                      min={0}
-                      max={360}
-                      value={rotation}
+                      value={color}
                       onChange={(e) => {
-                        const value = Number(e.target.value)
-                        setRotation(value) // solo UI
-                        rotationRef.current = value
-                        qrCode.current.update({
-                          dotsOptions: {
-                            type: dotsStyle,
-                            gradient: {
-                              type: gradientType,
-                              rotation: (value * Math.PI) / 180,
-                              colorStops: [
-                                { offset: 0, color: gradientColors[0] },
-                                { offset: 1, color: gradientColors[1] }
-                              ]
-                            }
-                          }
-                        })
+                        const newColors = [...gradientColors]
+                        newColors[index] = e.target.value
+                        setGradientColors(newColors)
                       }}
-                      className={style['size-input']}
                     />
-                    <div style={{minWidth:'30px', maxWidth:'30px'}}>{rotation}°</div>
-                  </div>
-                </label>
-              )}
-              {/* #end-section */}
+                  ))}
+                  {/* Botón para intercambiar colores */}
+                  <button
+                    type="button"
+                    onClick={() => setGradientColors([...gradientColors].reverse())}
+                    className={style['swap-button']}
+                  >
+                    Swap Colors
+                  </button>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+          </div>
+        </Collapsible>
+        {/* #end-section */}
+        {/* #section corners-square-options */}        
+        <Collapsible title="Corners Square Options">
+          <div className={style['section-container']}>
+            {/* #section Corners Square Type */}
+            <span className={style['input-label']}>Corners Square Type</span>
+            <div className={style['input-wrapper']}>
+              <select
+                onChange={(e) => setCSType(e.target.value as typeof CSType)}
+                value={CSType}
+              >
+                <option value="none">none</option>
+                <option value="square">square</option>
+                <option value="dot">dot</option>
+                <option value="extra-rounded">extra-rounded</option>
+              </select>
             </div>
-          </CollapsibleContainer>
-          {/* #end-section */}
-          {/* #section Corners Square Options */}
-          <CollapsibleContainer title="Corners Square Options">
-            <div className={style['options-group']}>
-              {/* #section corners square style */}
-              <label>
-                Corner Square Style:
-                <select
-                  value={cornersSquareStyle}
-                  onChange={(e) =>
-                    setCornersSquareStyle(
-                      e.target.value as
-                        | 'square'
-                        | 'dot'
-                        | 'extra-rounded'
-                        | 'classy'
-                        | 'classy-rounded'
-                    )
-                  }
-                >
-                  <option value="square">Square</option>
-                  <option value="dot">Dot</option>
-                  <option value="extra-rounded">Extra rounded</option>
-                  <option value="classy">Classy</option>
-                  <option value="classy-rounded">Classy rounded</option>
-                </select>
-              </label>
-              {/* #end-section */}
-              {/* #section color type */}
-              <label>
-                Color Type:
-                <select
-                  value={cornersSquareColorType}
-                  onChange={(e) =>
-                    setCornersSquareColorType(e.target.value as 'single' | 'gradient')
-                  }
-                >
-                  <option value="single">Single Color</option>
-                  <option value="gradient">Color Gradient</option>
-                </select>
-              </label>
-              {/* #end-section */}
-              {/* #section single color */}
-              {cornersSquareColorType === 'single' && (
-                <label>
-                  Corner Square Color:
+            {/* #end-section */}
+
+            {/* #section color-type */}
+            <span className={style['input-label']}>Color Type</span>
+            <div className={style['input-wrapper']}>
+              <select 
+                onChange={(e) => setCSColorType(e.target.value as typeof CSColorType)}
+                value={CSColorType}
+              >
+                <option value="single" defaultChecked>single</option>
+                <option value="gradient">gradient</option>
+              </select>
+            </div>
+            {/* #end-section */}
+
+            {/* #section corner-color */}
+            {CSColorType === 'single' &&
+              <>
+                <span className={style['input-label']}>Color</span>
+                <div className={style['input-wrapper']}>
                   <input
                     type="color"
-                    value={cornersSquareColor}
-                    onChange={(e) => setCornersSquareColor(e.target.value)}
+                    value={CSColor}
+                    onChange={(e) => setCSColor(e.target.value)}
                   />
-                </label>
-              )}
-              {/* #end-section */}
-              {/* #section gradient type */}
-              {cornersSquareColorType === 'gradient' && (
-                <label>
-                  Gradient type:
-                  <select
-                    value={cornersSquareGradientType}
-                    onChange={(e) =>
-                      setCornersSquareGradientType(e.target.value as 'linear' | 'radial')
-                    }
-                  >
-                    <option value="linear">Linear</option>
-                    <option value="radial">Radial</option>
-                  </select>
-                </label>
-              )}
-              {/* #end-section */}
-              {/* #section gradient colors */}
-              {cornersSquareColorType === 'gradient' && (
-                <label>
-                  Gradient colors:
-                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                    <input
-                      type="color"
-                      value={cornersSquareGradientColors[0]}
-                      onChange={(e) =>
-                        setCornersSquareGradientColors([
-                          e.target.value,
-                          cornersSquareGradientColors[1],
-                        ])
-                      }
-                    />
-                    <input
-                      type="color"
-                      value={cornersSquareGradientColors[1]}
-                      onChange={(e) =>
-                        setCornersSquareGradientColors([
-                          cornersSquareGradientColors[0],
-                          e.target.value,
-                        ])
-                      }
-                    />
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setCornersSquareGradientColors([
-                          cornersSquareGradientColors[1],
-                          cornersSquareGradientColors[0],
-                        ])
-                      }
-                      style={{ border: 'none', fontSize: '1.5rem' }}
-                    >
-                      🔄
-                    </button>
-                  </div>
-                </label>
-              )}
-              {/* #end-section */}
-              {/* #section rotation */}
-              {cornersSquareColorType === 'gradient' &&
-                cornersSquareGradientType === 'linear' && (
-                  <label>
-                    Rotation:
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                      <input
-                        type="range"
-                        min={0}
-                        max={360}
-                        value={cornersSquareRotation}
-                        onChange={(e) => {
-                          const value = Number(e.target.value)
-                          setCornersSquareRotation(value)
-                          cornerSquareRotationRef.current = value
-                          qrCode.current.update({
-                            cornersSquareOptions: {
-                              type: cornersSquareStyle,
-                              gradient: {
-                                type: cornersSquareGradientType,
-                                rotation: (value * Math.PI) / 180,
-                                colorStops: [
-                                  { offset: 0, color: cornersSquareGradientColors[0] },
-                                  { offset: 1, color: cornersSquareGradientColors[1] },
-                                ],
-                              },
-                            },
-                          })
-                        }}
-                        className={style['size-input']}
-                      />
-                      <div style={{ minWidth: '30px', maxWidth: '30px' }}>
-                        {cornersSquareRotation}°
-                      </div>
-                    </div>
-                  </label>
-                )}
-              {/* #end-section */}
-            </div>
-          </CollapsibleContainer>
-          {/* #end-section */}
+                </div>
+              </>
+            }
+            {/* #end-section */}
 
-        </div>
+            {/* #section gradient-type */}
+            {CSColorType === 'gradient' &&
+              <>
+                <span className={style['input-label']}>Gradient Type</span>
+                <div className={style['input-wrapper']}>
+                  <select
+                    onChange={(e) => setCSGradientType(e.target.value as typeof CSGradientType)}
+                    value={CSGradientType}
+                  >
+                    <option value="linear" defaultChecked>linear</option>
+                    <option value="radial">radial</option>
+                  </select>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+
+            {/* #section gradient-colors */}
+            {CSColorType === 'gradient' &&
+              <>
+                <span className={style['input-label']}>Gradient Colors</span>
+                <div className={style['input-wrapper']}>
+                  {CSGradientColors.map((color, index) => (
+                    <input
+                      key={index}
+                      type="color"
+                      value={color}
+                      onChange={(e) => {
+                        const newColors = [...CSGradientColors]
+                        newColors[index] = e.target.value
+                        setCSGradientColors(newColors)
+                      }}
+                    />
+                  ))}
+                  {/* Botón para intercambiar colores */}
+                  <button
+                    type="button"
+                    onClick={() => setCSGradientColors([...CSGradientColors].reverse())}
+                    className={style['swap-button']}
+                  >
+                    Swap Colors
+                  </button>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+          </div>
+        </Collapsible>
         {/* #end-section */}
-        {/* #section display-qr-section */}
-        <div className={style['display-qr-section']}>
-          <div ref={qrRef}></div>
-          <button>Download SVG</button>
-        </div>
-        {/* #end-section */}
+
       </div>
-    </>
+      {/* #end-section */}
+      {/* #section qr-render */}
+      <div className={style['qr-render']} ref={qrContainerRef}></div>
+      {/* #end-section */}
+    </div>
   )
+  // #end-section
+
 }
 export default QRCreator
-// #end-component

@@ -1,65 +1,62 @@
 /* src\modules\qrCreator\qrCreator.module.css */
 
-/* #style :root and :root * config */
-:root, :root *{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;  
-}
-/* #end-style */
-/* #style :root */
-:root{
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-}
-/* #end-style */
-/* #style .container */
-.container{
-  display: flex;
-  width: 100%;
-  height: 100%;
-  padding: 5px;
-  border: medium solid black;
-  column-gap: 5px;
-}
-/* #end-style */
-/* #style .container .options-menu */
-.container .options-menu {
-  border: medium solid black;
-  display: flex;
-  flex-direction: column;
-  background-color: #bbf;
-  flex: 70;
-  padding: 5px;
-}
-/* #end-style */
-/* #style .options-menu .options-group */
-.options-menu .options-group {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  align-items: center;
-  gap: 5px 10px;
-  margin-right: 10px;
-  border: thin solid red;
+.qr-creator-container, .qr-creator-container * {
+  box-sizing: border-box;
 }
 
-.options-menu .options-group label {
-  display: contents; /* para que label no rompa la grilla */
+.qr-creator-container {
+  border: thin solid black;
+  padding: 10px;
+  display: flex;
+  min-height: 500px;
+  height: 100%;
 }
 
-.options-menu .options-group input {
-  width: 100%;
+.qr-creator-container .qr-options{
+  flex: 7;
+  border: thin solid black;
 }
-/* #end-style */
-/* #style .container .display-qr-section */
-.container .display-qr-section {
-  border: medium solid black;
+
+.qr-creator-container .qr-render{
+  flex: 3;
+  border: thin solid black;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #ccf;
-  flex: 30;
+  background-color: #b0b0ff;
 }
-/* #end-style */
+
+.qr-options .section-container{
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  width: 100%;
+  gap: 5px 10px;
+  grid-auto-rows: 30px;
+}
+
+.input-wrapper{
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 10px;
+  padding: 0 10px;
+}
+
+.input-wrapper input, .input-wrapper select{
+  width: 100%
+}
+
+.input-wrapper .input-value, .input-wrapper button{
+  width: max-content;
+  white-space: nowrap;
+  align-self: center;
+  height: 100%;
+}
+
+
+
+.qr-options .section-container .input-label {
+  display: flex;
+  align-items: center;
+}

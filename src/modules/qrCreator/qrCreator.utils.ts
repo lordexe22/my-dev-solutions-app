@@ -1,1 +1,0 @@
-// src\modules\qrCreator\qrCreator.utils.ts
