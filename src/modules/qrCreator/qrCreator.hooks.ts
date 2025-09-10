@@ -86,6 +86,7 @@ export const useDotsOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<H
   const [dotColor, setDotColor] = useState<string>(qrCode._options.dotsOptions.color)
   const [gradientType, setGradientType] = useState<GradientType>('linear')
   const [gradientColors, setGradientColors] = useState<string[]>(['#000000', '#008000'])
+  const [gradientRotation, setGradientRotation] = useState<number>(0)
 
   useEffect(() => {
     if (!qrContainerRef.current) return
@@ -96,32 +97,33 @@ export const useDotsOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<H
 
     if (colorType === 'single') {
       dotsOptions.color = dotColor
-      dotsOptions.gradient = undefined // limpiar gradiente si existía
+      dotsOptions.gradient = undefined
     } else if (colorType === 'gradient') {
       const gradient: Gradient = {
         type: gradientType,
+        rotation: gradientRotation*Math.PI/180,
         colorStops: gradientColors.map((color, index) => ({
           offset: index / (gradientColors.length - 1),
           color
         }))
       }
       dotsOptions.gradient = gradient
-      dotsOptions.color = undefined // limpiar color plano si existía
+      dotsOptions.color = undefined
     }
 
     qrCode.update?.({ dotsOptions })
     qrCode.append(qrContainerRef.current)
-  }, [dotType, colorType, dotColor, gradientType, gradientColors, qrContainerRef])
+  }, [dotType, colorType, dotColor, gradientType, gradientColors, gradientRotation, qrContainerRef])
 
   return {
     dotType, setDotType,
     colorType, setColorType,
     dotColor, setDotColor,
     gradientType, setGradientType,
-    gradientColors, setGradientColors
+    gradientColors, setGradientColors,
+    gradientRotation, setGradientRotation
   }
 }
-
 // #end-hook
 // #hook useCornersSquareOptions
 export const useCornersSquareOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
@@ -132,6 +134,7 @@ export const useCornersSquareOptions = ({ qrContainerRef }: { qrContainerRef: Re
   const [CSColor, setCSColor] = useState<string>(qrCode._options.cornersSquareOptions?.color || '#000000')
   const [CSGradientType, setCSGradientType] = useState<'linear' | 'radial'>('linear')
   const [CSGradientColors, setCSGradientColors] = useState<string[]>(['#000000', '#008000'])
+  const [CSGradientRotation, setCSGradientRotation] = useState<number>(0)
 
   useEffect(() => {
     if (!qrContainerRef.current) return
@@ -150,6 +153,7 @@ export const useCornersSquareOptions = ({ qrContainerRef }: { qrContainerRef: Re
     } else if (CSColorType === 'gradient') {
       cornersOptions.gradient = {
         type: CSGradientType,
+        rotation: CSGradientRotation*Math.PI / 180, 
         colorStops: CSGradientColors.map((color, index) => ({
           offset: index / (CSGradientColors.length - 1),
           color
@@ -160,14 +164,15 @@ export const useCornersSquareOptions = ({ qrContainerRef }: { qrContainerRef: Re
 
     qrCode.update?.({ cornersSquareOptions: cornersOptions })
     qrCode.append(qrContainerRef.current)
-  }, [CSType, CSColorType, CSColor, CSGradientType, CSGradientColors, qrContainerRef])
+  }, [CSType, CSColorType, CSColor, CSGradientType, CSGradientColors, CSGradientRotation, qrContainerRef])
 
   return {
     CSType, setCSType, 
     CSColorType, setCSColorType, 
     CSColor, setCSColor, 
     CSGradientType, setCSGradientType, 
-    CSGradientColors, setCSGradientColors
+    CSGradientColors, setCSGradientColors,
+    CSGradientRotation, setCSGradientRotation
   }
 }
 // #end-hook

@@ -24,7 +24,8 @@ const QRCreator = () => {
     colorType, setColorType,
     dotColor, setDotColor,
     gradientType, setGradientType,
-    gradientColors, setGradientColors
+    gradientColors, setGradientColors,
+    gradientRotation, setGradientRotation
   } = useDotsOptions({ qrContainerRef });
   // #end-hook
   // #hook useCornersSquareOptions
@@ -33,7 +34,8 @@ const QRCreator = () => {
     CSColorType, setCSColorType, 
     CSColor, setCSColor, 
     CSGradientType, setCSGradientType, 
-    CSGradientColors, setCSGradientColors
+    CSGradientColors, setCSGradientColors,
+    CSGradientRotation, setCSGradientRotation
   } = useCornersSquareOptions({qrContainerRef})
   // #end-hook
 
@@ -188,6 +190,23 @@ const QRCreator = () => {
               </>
             }
             {/* #end-section */}
+            {/* #section gradient-rotation */}
+            {colorType === 'gradient' && gradientType === 'linear' &&
+              <>
+                <span className={style['input-label']}>Gradient Rotation</span>
+                <div className={style['input-wrapper']}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={360}
+                    value={gradientRotation}
+                    onChange={(e) => setGradientRotation(Number(e.target.value))}
+                  />
+                  <span className={style['input-value']}>{gradientRotation}°</span>
+                </div>
+              </>
+            }
+            {/* #end-section */}
           </div>
         </Collapsible>
         {/* #end-section */}
@@ -208,7 +227,6 @@ const QRCreator = () => {
               </select>
             </div>
             {/* #end-section */}
-
             {/* #section color-type */}
             <span className={style['input-label']}>Color Type</span>
             <div className={style['input-wrapper']}>
@@ -221,7 +239,6 @@ const QRCreator = () => {
               </select>
             </div>
             {/* #end-section */}
-
             {/* #section corner-color */}
             {CSColorType === 'single' &&
               <>
@@ -236,7 +253,6 @@ const QRCreator = () => {
               </>
             }
             {/* #end-section */}
-
             {/* #section gradient-type */}
             {CSColorType === 'gradient' &&
               <>
@@ -253,7 +269,6 @@ const QRCreator = () => {
               </>
             }
             {/* #end-section */}
-
             {/* #section gradient-colors */}
             {CSColorType === 'gradient' &&
               <>
@@ -283,6 +298,24 @@ const QRCreator = () => {
               </>
             }
             {/* #end-section */}
+            {/* #section gradient-rotation */}
+            {CSColorType === 'gradient' && CSGradientType === 'linear' &&
+              <>
+                <span className={style['input-label']}>Gradient Rotation</span>
+                <div className={style['input-wrapper']}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={360}
+                    value={CSGradientRotation}
+                    onChange={(e) => setCSGradientRotation(Number(e.target.value))}
+                  />
+                  <span className={style['input-value']}>{CSGradientRotation}°</span>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+
           </div>
         </Collapsible>
         {/* #end-section */}
