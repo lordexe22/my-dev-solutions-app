@@ -324,4 +324,157 @@ export const useCornersDotOptions = ({ qrContainerRef }: { qrContainerRef: RefOb
   // #end-section
 }
 // #end-hook
+// #hook useBackgroundOptions
+/**
+ * Manage the background options for the QR code: color or gradient.
+ *
+ * This hook allows selecting a single color or a gradient (linear or radial),
+ * and supports gradient rotation for linear gradients.
+ *
+ * @param {Object} params
+ * @param {RefObject<HTMLDivElement | null>} params.qrContainerRef - Container for the QR code.
+ *
+ * @returns {Object} Background options and their setters.
+ */
+export const useBackgroundOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  // #state [BGColorType, setBGColorType]
+  const [BGColorType, setBGColorType] = useState<ColorType>(
+    qrCode._options.backgroundOptions?.gradient ? 'gradient' : 'single'
+  )
+  // #end-state
+  // #state [BGColor, setBGColor]
+  const [BGColor, setBGColor] = useState<string>(
+    qrCode._options.backgroundOptions?.color ?? '#ffffff'
+  )
+  // #end-state
+  // #state [BGGradientType, setBGGradientType]
+  const [BGGradientType, setBGGradientType] = useState<GradientType>('linear')
+  // #end-state
+  // #state [BGGradientColors, setBGGradientColors]
+  const [BGGradientColors, setBGGradientColors] = useState<string[]>(['#ffffff', '#cccccc'])
+  // #end-state
+  // #state [BGGradientRotation, setBGGradientRotation]
+  const [BGGradientRotation, setBGGradientRotation] = useState<number>(0)
+  // #end-state
+  // #event updateBackgroundOptions
+  useEffect(() => {
+    // #step 1 - check container existence
+    if (!qrContainerRef.current) return
+    // #end-step
+    // #step 2 - clear container
+    qrContainerRef.current.innerHTML = ''
+    // #end-step
+    // #step 3 - construct backgroundOptions object
+    const backgroundOptions = { ...qrCode._options.backgroundOptions }
+
+    if (BGColorType === 'single') {
+      backgroundOptions.color = BGColor || ''
+      backgroundOptions.gradient = undefined
+    } else if (BGColorType === 'gradient') {
+      const gradient: Gradient = {
+        type: BGGradientType,
+        rotation: BGGradientType === 'linear' ? (BGGradientRotation * Math.PI) / 180 : undefined,
+        colorStops: BGGradientColors.map((color, index) => ({
+          offset: index / (BGGradientColors.length - 1),
+          color
+        }))
+      }
+      backgroundOptions.color = '' // en gradiente dejamos color como string vacío
+      backgroundOptions.gradient = gradient
+    }
+    // #end-step
+    // #step 4 - update and render QR code
+    qrCode.update?.({ backgroundOptions })
+    qrCode.append(qrContainerRef.current)
+    // #end-step
+  }, [BGColorType, BGColor, BGGradientType, BGGradientColors, BGGradientRotation, qrContainerRef])
+  // #end-event
+  // #section return
+  return {
+    BGColorType, setBGColorType,
+    BGColor, setBGColor,
+    BGGradientType, setBGGradientType,
+    BGGradientColors, setBGGradientColors,
+    BGGradientRotation, setBGGradientRotation
+  }
+  // #end-section
+}
+// #end-hook
+
+// #hook useImageOptions
+/**
+ * Manage the image options for the QR code, including uploading an image,
+ * hiding background dots, scaling the image, and setting margin.
+ *
+ * @param {Object} params
+ * @param {RefObject<HTMLDivElement | null>} params.qrContainerRef - Container for the QR code.
+ *
+ * @returns {Object} Image options and their setters.
+ */
+export const useImageOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  // #state [qrImage, setQRImage]
+  const [qrImage, setQRImage] = useState<File | undefined>(
+    (qrCode._options.image as File | undefined) ?? undefined
+  )
+  // #end-state
+  // #state [hideBackgroundDots, setHideBackgroundDots]
+  const [hideBackgroundDots, setHideBackgroundDots] = useState<boolean>(
+    qrCode._options.imageOptions?.hideBackgroundDots ?? false
+  )
+  // #end-state
+  // #state [imageScale, setImageScale]
+  const [imageScale, setImageScale] = useState<number>(
+    qrCode._options.imageOptions?.imageSize ?? 1
+  )
+  // #end-state
+  // #state [imageMargin, setImageMargin]
+  const [imageMargin, setImageMargin] = useState<number>(
+    qrCode._options.imageOptions?.margin ?? 0
+  )
+  // #end-state
+
+  // #event updateImageOptions
+  useEffect(() => {
+    // #step 1 - check container existence
+    if (!qrContainerRef.current) return
+    // #end-step
+    // #step 2 - clear container
+    qrContainerRef.current.innerHTML = ''
+    // #end-step
+    // #step 3 - build imageOptions object
+    const imageOptions = {
+      ...(qrCode._options.imageOptions ?? {}),
+      hideBackgroundDots,
+      imageSize: imageScale,
+      margin: imageMargin,
+      crossOrigin: undefined
+    }
+    // #step 4 - handle image as string (data URL) or undefined
+    if (qrImage instanceof File) {
+      const reader = new FileReader()
+      reader.onload = () => {
+        const image = reader.result as string
+        qrCode.update?.({ image, imageOptions })
+        qrCode.append(qrContainerRef.current!)
+      }
+      reader.readAsDataURL(qrImage)
+    } else {
+      const image = undefined
+      qrCode.update?.({ image, imageOptions })
+      qrCode.append(qrContainerRef.current)
+    }
+    // #end-step
+  }, [qrImage, hideBackgroundDots, imageScale, imageMargin, qrContainerRef])
+  // #end-event
+
+  // #section return
+  return {
+    qrImage, setQRImage,
+    hideBackgroundDots, setHideBackgroundDots,
+    imageScale, setImageScale,
+    imageMargin, setImageMargin
+  }
+  // #end-section
+}
+// #end-hook
 

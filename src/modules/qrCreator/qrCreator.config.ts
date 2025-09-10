@@ -10,7 +10,6 @@ export const defaultConfigOptions: Options = {
   height: 250,
   margin: 10,
   data: undefined, // empty input
-  image: undefined, // no image
   dotsOptions:{
     type: 'square',
     color: 'black',
@@ -31,6 +30,14 @@ export const defaultConfigOptions: Options = {
     color: 'white',
     gradient: undefined,
     round: undefined
+  },
+  image: undefined,
+  imageOptions: {
+    saveAsBlob: undefined,
+    hideBackgroundDots: undefined,
+    imageSize: 1,
+    margin: 0,
+    crossOrigin: undefined, // 'anonymous' | 'use-credentials' | undefined
   }
 }
 

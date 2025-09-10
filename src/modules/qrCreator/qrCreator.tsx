@@ -1,7 +1,15 @@
 
 import style from './qrCreator.module.css'
 import Collapsible from '../collapsibleContainer/collapsibleContainer'
-import { useQRContainerRef, useBasicOptions, useDotsOptions, useCornersSquareOptions, useCornersDotOptions } from './qrCreator.hooks'
+import { 
+  useQRContainerRef, 
+  useBasicOptions, 
+  useDotsOptions, 
+  useCornersSquareOptions, 
+  useCornersDotOptions,
+  useBackgroundOptions,
+  useImageOptions
+} from './qrCreator.hooks'
 import type { DotType, GradientType } from 'qr-code-styling'
 import type { ColorType } from './qrCreator.d'
 
@@ -47,6 +55,23 @@ const QRCreator = () => {
     CDGradientColors, setCDGradientColors,
     CDGradientRotation, setCDGradientRotation
   } = useCornersDotOptions({qrContainerRef})
+  // #end-hook
+  // #hook useBackgroundOptions
+  const {
+    BGColorType, setBGColorType,
+    BGColor, setBGColor,
+    BGGradientType, setBGGradientType,
+    BGGradientColors, setBGGradientColors,
+    BGGradientRotation, setBGGradientRotation
+  } = useBackgroundOptions({ qrContainerRef })
+  // #end-hook
+  // #hook useImageOptions
+  const {
+    qrImage, setQRImage,
+    hideBackgroundDots, setHideBackgroundDots,
+    imageScale, setImageScale,
+    imageMargin, setImageMargin
+  } = useImageOptions({ qrContainerRef })
   // #end-hook
 
   // #section return
@@ -428,7 +453,166 @@ const QRCreator = () => {
           </div>
         </Collapsible>
         {/* #end-section */}
-
+        {/* #section background-options */}
+        <Collapsible title="Background Options">
+          <div className={style['section-container']}>
+            {/* #section background-color-type */}
+            <span className={style['input-label']}>Color Type</span>
+            <div className={style['input-wrapper']}>
+              <select
+                onChange={(e) => setBGColorType(e.target.value as typeof BGColorType)}
+                value={BGColorType}
+              >
+                <option value="single" defaultChecked>single</option>
+                <option value="gradient">gradient</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section background-color */}
+            {BGColorType === 'single' &&
+              <>
+                <span className={style['input-label']}>Color</span>
+                <div className={style['input-wrapper']}>
+                  <input
+                    type="color"
+                    value={BGColor}
+                    onChange={(e) => setBGColor(e.target.value)}
+                  />
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section background-gradient-type */}
+            {BGColorType === 'gradient' &&
+              <>
+                <span className={style['input-label']}>Gradient Type</span>
+                <div className={style['input-wrapper']}>
+                  <select
+                    onChange={(e) => setBGGradientType(e.target.value as typeof BGGradientType)}
+                    value={BGGradientType}
+                  >
+                    <option value="linear" defaultChecked>linear</option>
+                    <option value="radial">radial</option>
+                  </select>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section background-gradient-colors */}
+            {BGColorType === 'gradient' &&
+              <>
+                <span className={style['input-label']}>Gradient Colors</span>
+                <div className={style['input-wrapper']}>
+                  {BGGradientColors.map((color, index) => (
+                    <input
+                      key={index}
+                      type="color"
+                      value={color}
+                      onChange={(e) => {
+                        const newColors = [...BGGradientColors]
+                        newColors[index] = e.target.value
+                        setBGGradientColors(newColors)
+                      }}
+                    />
+                  ))}
+                  {/* Botón para intercambiar colores */}
+                  <button
+                    type="button"
+                    onClick={() => setBGGradientColors([...BGGradientColors].reverse())}
+                    className={style['swap-button']}
+                  >
+                    Swap Colors
+                  </button>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section background-gradient-rotation */}
+            {BGColorType === 'gradient' && BGGradientType === 'linear' &&
+              <>
+                <span className={style['input-label']}>Gradient Rotation</span>
+                <div className={style['input-wrapper']}>
+                  <input
+                    type="range"
+                    min={0}
+                    max={360}
+                    value={BGGradientRotation}
+                    onChange={(e) => setBGGradientRotation(Number(e.target.value))}
+                  />
+                  <span className={style['input-value']}>{BGGradientRotation}°</span>
+                </div>
+              </>
+            }
+            {/* #end-section */}
+          </div>
+        </Collapsible>
+        {/* #end-section */}
+        {/* #section image-options */}
+        <Collapsible title="Image Options">
+          <div className={style['section-container']}>
+            {/* #section upload-image */}
+          <span className={style['input-label']}>Upload Image</span>
+          <div className={style['input-wrapper']}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (file) setQRImage(file)
+              }}
+            />
+            {qrImage && (
+              <button
+                type="button"
+                className={style['remove-button']}
+                onClick={() => setQRImage(undefined)}
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          {/* #end-section */}
+            {/* #section hide-background-dots */}
+            <span className={style['input-label']}>Hide Background Dots</span>
+            <div className={style['input-wrapper']} style={{justifyContent: 'flex-start'}}>
+              <input
+                style={{width: 'auto'}}
+                type="checkbox"
+                checked={hideBackgroundDots}
+                onChange={(e) => setHideBackgroundDots(e.target.checked)}
+              />
+            </div>
+            {/* #end-section */}
+            {/* #section image-scale */}
+            <span className={style['input-label']}>Image Scale</span>
+            <div className={style['input-wrapper']}>
+              <input
+                type="range"
+                min={0.1}
+                max={1}
+                step={0.1}
+                value={imageScale}
+                onChange={(e) => setImageScale(Number(e.target.value))}
+              />
+              <span className={style['input-value']}>{Math.round(imageScale * 100)}%</span>
+            </div>
+            {/* #end-section */}
+            {/* #section image-margin */}
+            <span className={style['input-label']}>Image Margin</span>
+            <div className={style['input-wrapper']}>
+              <input
+                type="range"
+                min={0}
+                max={50}
+                step={1}
+                value={imageMargin}
+                onChange={(e) => setImageMargin(Number(e.target.value))}
+              />
+              <span className={style['input-value']}>{imageMargin}px</span>
+            </div>
+            {/* #end-section */}
+          </div>
+        </Collapsible>
         {/* #end-section */}
 
       </div>
