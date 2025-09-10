@@ -1,7 +1,7 @@
 
 import style from './qrCreator.module.css'
 import Collapsible from '../collapsibleContainer/collapsibleContainer'
-import { useQRContainerRef, useBasicOptions, useDotsOptions, useCornersSquareOptions } from './qrCreator.hooks'
+import { useQRContainerRef, useBasicOptions, useDotsOptions, useCornersSquareOptions, useCornersDotOptions } from './qrCreator.hooks'
 import type { DotType, GradientType } from 'qr-code-styling'
 import type { ColorType } from './qrCreator.d'
 
@@ -38,7 +38,16 @@ const QRCreator = () => {
     CSGradientRotation, setCSGradientRotation
   } = useCornersSquareOptions({qrContainerRef})
   // #end-hook
-
+  // #hook useCornersDotOptions
+  const {
+    CDType, setCDType,
+    CDColorType, setCDColorType,
+    CDColor, setCDColor,
+    CDGradientType, setCDGradientType,
+    CDGradientColors, setCDGradientColors,
+    CDGradientRotation, setCDGradientRotation
+  } = useCornersDotOptions({qrContainerRef})
+  // #end-hook
 
   // #section return
   return(
@@ -315,9 +324,111 @@ const QRCreator = () => {
               </>
             }
             {/* #end-section */}
+          </div>
+        </Collapsible>
+        {/* #end-section */}
+        {/* #section corners-dot-options */}        
+        <Collapsible title="Corners Dot Options">
+          <div className={style['section-container']}>
+            {/* #section corners-dot-type */}
+            <span className={style['input-label']}>Corners Dot Type</span>
+            <div className={style['input-wrapper']}>
+              <select
+                onChange={(e) => setCDType(e.target.value as typeof CDType)}
+                value={CDType}
+              >
+                <option value="none">none</option>
+                <option value="dot">dot</option>
+                <option value="square">square</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section color-type */}
+            <span className={style['input-label']}>Color Type</span>
+            <div className={style['input-wrapper']}>
+              <select
+                onChange={(e) => setCDColorType(e.target.value as typeof CDColorType)}
+                value={CDColorType}
+              >
+                <option value="single">single</option>
+                <option value="gradient">gradient</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section corners-dot-color */}
+            {CDColorType === 'single' &&
+              <>
+                <span className={style['input-label']}>Color</span>
+                <div className={style['input-wrapper']}>
+                  <input
+                    type="color"
+                    value={CDColor}
+                    onChange={(e) => setCDColor(e.target.value)}
+                  />
+                </div>
+              </>
+            }
+            {/* #end-section */}
+            {/* #section corners-dot-gradient */}
+            {CDColorType === 'gradient' &&
+              <>
+                <span className={style['input-label']}>Gradient Type</span>
+                <div className={style['input-wrapper']}>
+                  <select
+                    onChange={(e) => setCDGradientType(e.target.value as typeof CDGradientType)}
+                    value={CDGradientType}
+                  >
+                    <option value="linear">linear</option>
+                    <option value="radial">radial</option>
+                  </select>
+                </div>
+
+                <span className={style['input-label']}>Gradient Colors</span>
+                <div className={style['input-wrapper']}>
+                  {CDGradientColors.map((color, index) => (
+                    <input
+                      key={index}
+                      type="color"
+                      value={color}
+                      onChange={(e) => {
+                        const newColors = [...CDGradientColors]
+                        newColors[index] = e.target.value
+                        setCDGradientColors(newColors)
+                      }}
+                    />
+                  ))}
+                  <button
+                    type="button"
+                    className={style['swap-button']}
+                    onClick={() => setCDGradientColors([...CDGradientColors].reverse())}
+                  >
+                    Swap Colors
+                  </button>
+                </div>
+
+                {CDGradientType === 'linear' &&
+                  <>
+                    <span className={style['input-label']}>Gradient Rotation</span>
+                    <div className={style['input-wrapper']}>
+                      <input
+                        type="range"
+                        min={0}
+                        max={360}
+                        value={CDGradientRotation}
+                        onChange={(e) => setCDGradientRotation(Number(e.target.value))}
+                      />
+                      <span className={style['input-value']}>{CDGradientRotation}°</span>
+                    </div>
+                  </>
+                }
+              </>
+            }
+            {/* #end-section */}
 
           </div>
         </Collapsible>
+        {/* #end-section */}
+
         {/* #end-section */}
 
       </div>

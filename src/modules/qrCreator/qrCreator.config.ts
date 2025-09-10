@@ -21,6 +21,16 @@ export const defaultConfigOptions: Options = {
     type: 'square',
     color: 'black',
     gradient: undefined
+  },
+  cornersDotOptions: {
+    type: 'square',
+    color: 'black',
+    gradient: undefined
+  },
+  backgroundOptions:{
+    color: 'white',
+    gradient: undefined,
+    round: undefined
   }
 }
 
