@@ -8,9 +8,16 @@ import {
   useCornersSquareOptions, 
   useCornersDotOptions,
   useBackgroundOptions,
-  useImageOptions
+  useImageOptions,
+  useQROptions
 } from './qrCreator.hooks'
-import type { DotType, GradientType } from 'qr-code-styling'
+import type { 
+  DotType, 
+  GradientType, 
+  Mode, 
+  ErrorCorrectionLevel,
+  TypeNumber
+} from 'qr-code-styling'
 import type { ColorType } from './qrCreator.d'
 
 const QRCreator = () => {
@@ -73,7 +80,13 @@ const QRCreator = () => {
     imageMargin, setImageMargin
   } = useImageOptions({ qrContainerRef })
   // #end-hook
-
+  // #hook useQROptions
+  const {
+    typeNumber, setTypeNumber,
+    mode, setMode,
+    errorCorrectionLevel, setErrorCorrectionLevel
+  } = useQROptions({ qrContainerRef })
+  // #end-hook
   // #section return
   return(
     <div className={style['qr-creator-container']}>
@@ -614,7 +627,68 @@ const QRCreator = () => {
           </div>
         </Collapsible>
         {/* #end-section */}
+        {/* #section qr-options */}
+        <Collapsible title="QR Options">
+          <div className={style['section-container']}>
+            {/* #section type-number */}
+            <span className={style['input-label']}>Type Number</span>
+            
+            <div className={style['input-wrapper']}>
+              <input
+                type="range"
+                min={5}
+                max={40}
+                value={typeNumber && typeNumber > 0 ? typeNumber : 5}
+                onChange={(e) => {
+                  const value = Number(e.target.value)
+                  setTypeNumber(value as TypeNumber)
+                }}
+                disabled={typeNumber === 0} // deshabilitado si estamos usando el valor por defecto
+              />
+              <span className={style['slider-value']}>{typeNumber ?? 0}</span>
 
+              <label style={{ marginLeft: '10px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                <input
+                  type="checkbox"
+                  checked={typeNumber === 0}
+                  onChange={(e) => setTypeNumber(e.target.checked ? 0 : 5)}
+                />
+                Default
+              </label>
+
+            </div>
+            {/* #end-section */}
+            {/* #section mode */}
+            <span className={style['input-label']}>Mode</span>
+            <div className={style['input-wrapper']}>
+              <select
+                value={mode}
+                onChange={(e) => setMode(e.target.value as Mode)}
+              >
+                <option value="Numeric">Numeric</option>
+                <option value="Alphanumeric">Alphanumeric</option>
+                <option value="Byte">Byte</option>
+                <option value="Kanji">Kanji</option>
+              </select>
+            </div>
+            {/* #end-section */}
+            {/* #section error-correction-level */}
+            <span className={style['input-label']}>Error Correction Level</span>
+            <div className={style['input-wrapper']}>
+              <select
+                value={errorCorrectionLevel}
+                onChange={(e) => setErrorCorrectionLevel(e.target.value as ErrorCorrectionLevel)}
+              >
+                <option value="L">L - Low</option>
+                <option value="M">M - Medium</option>
+                <option value="Q">Q - Quartile</option>
+                <option value="H">H - High</option>
+              </select>
+            </div>
+            {/* #end-section */}
+          </div>
+        </Collapsible>
+        {/* #end-section */}
       </div>
       {/* #end-section */}
       {/* #section qr-render */}

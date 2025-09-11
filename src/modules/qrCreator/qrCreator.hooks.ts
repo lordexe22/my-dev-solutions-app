@@ -4,7 +4,16 @@
 import { useEffect, useRef, useState, type RefObject } from 'react'
 import { qrCode } from './qrCreator.config';
 import type { ColorType } from './qrCreator.d'
-import type { DotType, GradientType, Gradient, CornerSquareType, CornerDotType } from 'qr-code-styling';
+import type { 
+  DotType, 
+  GradientType, 
+  Gradient, 
+  CornerSquareType, 
+  CornerDotType,
+  ErrorCorrectionLevel,
+  Mode,
+  TypeNumber 
+} from 'qr-code-styling';
 // #end-section
 
 // #hook useQRContainerRef
@@ -400,7 +409,6 @@ export const useBackgroundOptions = ({ qrContainerRef }: { qrContainerRef: RefOb
   // #end-section
 }
 // #end-hook
-
 // #hook useImageOptions
 /**
  * Manage the image options for the QR code, including uploading an image,
@@ -477,4 +485,72 @@ export const useImageOptions = ({ qrContainerRef }: { qrContainerRef: RefObject<
   // #end-section
 }
 // #end-hook
+
+
+// #hook useQROptions
+/**
+ * Manage the QR code specific options: typeNumber, mode, and errorCorrectionLevel.
+ *
+ * This hook exposes state setters for each option and automatically re-renders
+ * the QR code inside the provided container when any of them change.
+ *
+ * @param {Object} params
+ * @param {RefObject<HTMLDivElement | null>} params.qrContainerRef - Reference to the container where the QR code will be rendered.
+ *
+ * @returns {{
+ *   typeNumber: TypeNumber,
+ *   setTypeNumber: Dispatch<SetStateAction<TypeNumber>>,
+ *   mode: Mode,
+ *   setMode: Dispatch<SetStateAction<Mode>>,
+ *   errorCorrectionLevel: ErrorCorrectionLevel,
+ *   setErrorCorrectionLevel: Dispatch<SetStateAction<ErrorCorrectionLevel>>
+ * }}
+ */
+export const useQROptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTMLDivElement | null> }) => {
+  // #state [typeNumber, setTypeNumber]
+  const [typeNumber, setTypeNumber] = useState<TypeNumber>(
+    qrCode._options.qrOptions?.typeNumber ?? 0
+  )
+  // #end-state
+  // #state [mode, setMode]
+  const [mode, setMode] = useState<Mode>(
+    qrCode._options.qrOptions?.mode ?? 'Byte'
+  )
+  // #end-state
+  // #state [errorCorrectionLevel, setErrorCorrectionLevel]
+  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState<ErrorCorrectionLevel>(
+    qrCode._options.qrOptions?.errorCorrectionLevel ?? 'M'
+  )
+  // #end-state
+  // #event updateQROptions
+  useEffect(() => {
+    // #step 1 - check container existence
+    if (!qrContainerRef.current) return
+    // #end-step
+    // #step 2 - clear container
+    qrContainerRef.current.innerHTML = ''
+    // #end-step
+    // #step 3 - construct qrOptions object
+    const qrOptions: Partial<typeof qrCode._options.qrOptions> = {
+      mode,
+      errorCorrectionLevel,
+      typeNumber
+    }
+    // #end-step
+    // #step 4 - update and render QR code
+    qrCode.update?.({ qrOptions })
+    qrCode.append(qrContainerRef.current)
+    // #end-step
+  }, [typeNumber, mode, errorCorrectionLevel, qrContainerRef])
+  // #end-event
+  // #section return
+  return {
+    typeNumber, setTypeNumber,
+    mode, setMode,
+    errorCorrectionLevel, setErrorCorrectionLevel
+  }
+  // #end-section
+}
+// #end-hook
+
 

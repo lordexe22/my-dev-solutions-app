@@ -9,7 +9,7 @@ export const defaultConfigOptions: Options = {
   width: 250,
   height: 250,
   margin: 10,
-  data: undefined, // empty input
+  data: '', // empty input
   dotsOptions:{
     type: 'square',
     color: 'black',
@@ -38,6 +38,11 @@ export const defaultConfigOptions: Options = {
     imageSize: 1,
     margin: 0,
     crossOrigin: undefined, // 'anonymous' | 'use-credentials' | undefined
+  },
+  qrOptions:{
+    typeNumber: 0,
+    mode: 'Byte', 
+    errorCorrectionLevel: 'M', 
   }
 }
 

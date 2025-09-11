@@ -47,7 +47,7 @@
   width: 100%
 }
 
-.input-wrapper .input-value, .input-wrapper button{
+.input-wrapper .input-value, .input-wrapper button, .input-wrapper label{
   width: max-content;
   white-space: nowrap;
   align-self: center;
@@ -59,4 +59,9 @@
 .qr-options .section-container .input-label {
   display: flex;
   align-items: center;
+}
+
+input[type="checkbox"] {
+  transform: scale(4); /* 1.5 veces más grande */
+  margin: 0 5px;
 }
