@@ -4,7 +4,7 @@ import QRCodeStyling from 'qr-code-styling'
 import type { Options, DownloadOptions } from 'qr-code-styling';
 
 export const defaultConfigOptions: Options = {
-  type: 'canvas', // 'canvas' | 'svg'
+  type: 'svg', // 'canvas' | 'svg'
   shape: 'square', // 'square' | 'circle'
   width: 250,
   height: 250,
@@ -57,3 +57,8 @@ export const defaultDownloadOptions: DownloadOptions = {
 
 /** qrCode */
 export const qrCode = new QRCodeStyling(defaultConfigOptions);
+
+/** #info
+ * 
+ * 1 - Si en defaultConfigOptions, se hace type = 'canvas', entonces el codigo QR generado va a parpadear cada vez que se modifique un input (como cuando de deslizan los sliders)
+*/
