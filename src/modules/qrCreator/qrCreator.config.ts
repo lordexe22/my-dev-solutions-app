@@ -2,6 +2,17 @@
 
 import QRCodeStyling from 'qr-code-styling'
 import type { Options, DownloadOptions } from 'qr-code-styling';
+import type { EnabledConfigOptions } from './qrCreator.d';
+
+export const enabledConfigOptions: EnabledConfigOptions = {
+  basicOptions: true,
+  dotsOptions: true,
+  cornerSquareOptions: true,
+  cornersDotOptions: true,
+  backgroundOptions: true,
+  imageOptions: true,
+  qrOptions: true
+}
 
 export const defaultConfigOptions: Options = {
   type: 'svg', // 'canvas' | 'svg'
