@@ -9,7 +9,8 @@ import {
   useCornersDotOptions,
   useBackgroundOptions,
   useImageOptions,
-  useQROptions
+  useQROptions,
+  useQRCodeDownload
 } from './qrCreator.hooks'
 import type { 
   DotType, 
@@ -21,7 +22,6 @@ import type {
 import type { ColorType } from './qrCreator.d'
 
 const QRCreator = () => {
-
   // #hook useQRContainerRef
   const {qrContainerRef} = useQRContainerRef()
   // #end-hook
@@ -87,6 +87,10 @@ const QRCreator = () => {
     errorCorrectionLevel, setErrorCorrectionLevel
   } = useQROptions({ qrContainerRef })
   // #end-hook
+  // #hook useQRCodeDownload
+  const { downloadQR } = useQRCodeDownload();
+  // #end-hook
+
   // #section return
   return(
     <div className={style['qr-creator-container']}>
@@ -692,7 +696,20 @@ const QRCreator = () => {
       </div>
       {/* #end-section */}
       {/* #section qr-render */}
-      <div className={style['qr-render']} ref={qrContainerRef}></div>
+      {/* Contenedor del QR */}
+
+      <div className={style['qr-render']} >
+        <div ref={qrContainerRef} className={style['qr-container']}></div>
+        {/* Botones de descarga, solo si hay QR generado */}
+        <div className={style['qr-download-buttons']}>
+          <button onClick={() => downloadQR('png')}>Descargar PNG</button>
+          <button onClick={() => downloadQR('svg')}>Descargar SVG</button>
+          <button onClick={() => downloadQR('jpeg')}>Descargar JPEG</button>
+          <button onClick={() => downloadQR('webp')}>Descargar WEBP</button>
+        </div>
+      </div>
+
+
       {/* #end-section */}
     </div>
   )

@@ -1,10 +1,10 @@
 // src\modules\qrCreator\qrCreator.config.ts
 
 import QRCodeStyling from 'qr-code-styling'
-import type { Options } from 'qr-code-styling';
+import type { Options, DownloadOptions } from 'qr-code-styling';
 
 export const defaultConfigOptions: Options = {
-  type: 'svg', // 'canvas' | 'svg'
+  type: 'canvas', // 'canvas' | 'svg'
   shape: 'square', // 'square' | 'circle'
   width: 250,
   height: 250,
@@ -43,11 +43,16 @@ export const defaultConfigOptions: Options = {
     typeNumber: 0,
     mode: 'Byte', 
     errorCorrectionLevel: 'M', 
-  }
+  },
 }
 
 export const defaultCustomConfigOptions = {
   colorStyle: 'single'
+}
+
+export const defaultDownloadOptions: DownloadOptions = {
+  name: 'qr-code',
+  extension: 'png', // "svg" | "png" | "jpeg" | "webp"
 }
 
 /** qrCode */

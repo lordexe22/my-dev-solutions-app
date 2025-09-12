@@ -12,7 +12,8 @@ import type {
   CornerDotType,
   ErrorCorrectionLevel,
   Mode,
-  TypeNumber 
+  TypeNumber,
+  FileExtension
 } from 'qr-code-styling';
 // #end-section
 
@@ -554,3 +555,17 @@ export const useQROptions = ({ qrContainerRef }: { qrContainerRef: RefObject<HTM
 // #end-hook
 
 
+export function useQRCodeDownload() {
+  // Descarga el QR en el formato solicitado
+  const downloadQR = (extension: FileExtension) => {
+    if (extension === 'svg') {
+      qrCode.update({ type: 'svg' });
+      qrCode.download({ name: 'qr-code', extension });
+      qrCode.update({ type: 'canvas' }); // volvemos a canvas si era canvas
+    } else {
+      qrCode.download({ name: 'qr-code', extension });
+    }
+  };
+
+  return { downloadQR };
+}
