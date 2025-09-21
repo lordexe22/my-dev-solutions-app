@@ -284,7 +284,7 @@ const applyRangeFilter = (value: unknown, rule: RangeFilter): boolean => {
   switch (rule.operator) {
     case "between":
       return withinRange;
-    case "not_between":
+    case "notBetween":
       return !withinRange;
     default:
       return false;
@@ -388,11 +388,11 @@ const applyStringFilter = (value: unknown, rule: StringFilter): boolean => {
   switch (rule.operator) {
     case "contains":
       return targetValue.includes(searchValue);
-    case "not_contains":
+    case "notContains":
       return !targetValue.includes(searchValue);
-    case "starts_with":
+    case "startsWith":
       return targetValue.startsWith(searchValue);
-    case "ends_with":
+    case "endsWith":
       return targetValue.endsWith(searchValue);
     default:
       return false;
