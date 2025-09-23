@@ -1,6 +1,6 @@
 // #type ProductActionsType
 export type ProductActionsType = {
-  type: 'SET_FORM_FIELD' | 'ADD_PRODUCT' | 'UPDATE_PRODUCT' | 'DELETE_PRODUCT' | 'RESET_FORM' | 'SET_FORM_DATA' | 'EDIT_PRODUCT' | 'TOGGLE_FORM'
+  type: 'SET_FORM_FIELD' | 'ADD_PRODUCT' | 'UPDATE_PRODUCT' | 'DELETE_PRODUCT' | 'RESET_FORM' | 'SET_FORM_DATA' | 'EDIT_PRODUCT' | 'TOGGLE_FORM' | 'TOGGLE_DELETE_CONFIRM'
   payload?: {
     field?: keyof ProductBaseType
     value?: unknown
@@ -92,11 +92,3 @@ export type ProductBaseType = {
   sku?: string // Stock Keeping Unit (stock control) - example: NIKE-AIRZOOM-42
 }
 // #end-type
-
-// #interface ProductMakerState
-export interface ProductMakerState {
-  products: ProductBaseType[]
-  currentForm: Partial<ProductBaseType>
-  isFormVisible: boolean
-}
-// #end-interface

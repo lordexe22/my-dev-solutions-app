@@ -1,213 +1,165 @@
-import { useReducer } from "react";
-import * as types from "./productMaker.d";
-import { initialProductMakerState } from "./productMaker.config";
+// #section Imports
+import { useReducer } from 'react';
+import * as types from './productMaker.d';
+import { initialProductState } from './productMaker.config';
+// #end-section
 
-export const useProducts = () => {
-  
-  const generateId = (): string => {
-    return `product_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  };
+// #interface ModalState
+interface ModalState {
+  isOpen: boolean;
+  formData: types.ProductBaseType;
+  isEditing: boolean;
+  editingProductId?: string;
+}
+// #end-interface
 
-  const generateSKU = (name: string, brand?: string): string => {
-    const cleanName = name.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
-    const cleanBrand = brand ? brand.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4) : 'NOBR';
-    const timestamp = Date.now().toString().slice(-4);
-    return `${cleanBrand}-${cleanName}-${timestamp}`;
-  };
+// #interface ProductListState
+interface ProductListState {
+  products: types.ProductBaseType[];
+  showDeleteConfirm: boolean;
+  productToDelete?: string;
+}
+// #end-interface
 
-  const reducer = (
-    currentState: types.ProductMakerState, 
-    action: types.ProductActionsType
-  ): types.ProductMakerState => {
-    
-    switch (action.type) {
-      case 'SET_FORM_FIELD':
-        if (!action.payload?.field || action.payload.value === undefined) {
-          return currentState;
+// #function modalFormReducer - Logic for modal form state management
+const modalFormReducer = (state: ModalState, action: types.ProductActionsType): ModalState => {
+  switch (action.type) {
+    case 'TOGGLE_FORM':
+      return {
+        ...state,
+        isOpen: !state.isOpen,
+        // Resetear formulario al cerrar
+        formData: state.isOpen ? initialProductState : state.formData,
+        isEditing: false,
+        editingProductId: undefined
+      };
+
+    case 'EDIT_PRODUCT':
+      if (!action.payload?.product || !action.payload?.productId) return state;
+      
+      return {
+        ...state,
+        isOpen: true,
+        isEditing: true,
+        editingProductId: action.payload.productId,
+        formData: { ...action.payload.product }
+      };
+
+    case 'SET_FORM_FIELD':
+      if (!action.payload?.field || action.payload.value === undefined) return state;
+      
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [action.payload.field]: action.payload.value
         }
-        
-        return {
-          ...currentState,
-          currentForm: {
-            ...currentState.currentForm,
-            [action.payload.field]: action.payload.value
-          }
-        };
+      };
 
-      case 'SET_FORM_DATA':
-        return {
-          ...currentState,
-          currentForm: {
-            ...currentState.currentForm,
-            ...action.payload?.formData
-          }
-        };
-
-      case 'TOGGLE_FORM':
-        return {
-          ...currentState,
-          isFormVisible: !currentState.isFormVisible,
-          // Reset form when closing, but keep data when opening
-          currentForm: !currentState.isFormVisible 
-            ? currentState.currentForm 
-            : initialProductMakerState.currentForm
-        };
-
-      case 'EDIT_PRODUCT': {
-        if (!action.payload?.product) {
-          return currentState;
+    case 'SET_FORM_DATA':
+      return {
+        ...state,
+        formData: {
+          ...initialProductState,
+          ...(action.payload?.formData || {})
         }
-        
-        return {
-          ...currentState,
-          currentForm: { ...action.payload.product },
-          isFormVisible: true
-        };
-      }
+      };
 
-      case 'ADD_PRODUCT': {
-        const formData = currentState.currentForm;
-        
-        // Validación básica
-        if (!formData.name?.trim() || !formData.description?.main?.trim()) {
-          console.warn('Product name and description are required');
-          return currentState;
-        }
+    case 'RESET_FORM':
+      return {
+        ...state,
+        formData: initialProductState,
+        isEditing: false,
+        editingProductId: undefined
+      };
 
-        const newProduct: types.ProductBaseType = {
-          id: generateId(),
-          name: formData.name.trim(),
-          price: formData.price || { type: 'pesos', value: 0 },
-          description: {
-            main: formData.description.main.trim(),
-            short: formData.description?.short?.trim() || undefined
-          },
-          category: formData.category && formData.category.length > 0 ? formData.category : undefined,
-          tags: formData.tags && formData.tags.length > 0 ? formData.tags : undefined,
-          available: formData.available !== undefined ? formData.available : true,
-          brand: formData.brand?.trim() || undefined,
-          stock: formData.stock !== undefined ? formData.stock : undefined,
-          sku: formData.sku?.trim() || generateSKU(formData.name, formData.brand),
-          weight: formData.weight?.value ? formData.weight : undefined,
-          dimensions: (formData.dimensions?.height || formData.dimensions?.width || formData.dimensions?.length) 
-            ? formData.dimensions 
-            : undefined,
-          colors: formData.colors && formData.colors.length > 0 ? formData.colors : undefined,
-          images: formData.images || undefined
-        };
+    default:
+      return state;
+  }
+};
+// #end-function
 
-        return {
-          ...currentState,
-          products: [...currentState.products, newProduct],
-          currentForm: initialProductMakerState.currentForm,
-          isFormVisible: false
-        };
-      }
-
-      case 'UPDATE_PRODUCT': {
-        const formData = currentState.currentForm;
-        
-        // Validación básica
-        if (!formData.name?.trim() || !formData.description?.main?.trim() || !formData.id) {
-          console.warn('Product ID, name and description are required for update');
-          return currentState;
-        }
-
-        const updatedProduct: types.ProductBaseType = {
-          id: formData.id,
-          name: formData.name.trim(),
-          price: formData.price || { type: 'pesos', value: 0 },
-          description: {
-            main: formData.description.main.trim(),
-            short: formData.description?.short?.trim() || undefined
-          },
-          category: formData.category && formData.category.length > 0 ? formData.category : undefined,
-          tags: formData.tags && formData.tags.length > 0 ? formData.tags : undefined,
-          available: formData.available !== undefined ? formData.available : true,
-          brand: formData.brand?.trim() || undefined,
-          stock: formData.stock !== undefined ? formData.stock : undefined,
-          sku: formData.sku || generateSKU(formData.name, formData.brand), // Mantener SKU existente o generar nuevo
-          weight: formData.weight?.value ? formData.weight : undefined,
-          dimensions: (formData.dimensions?.height || formData.dimensions?.width || formData.dimensions?.length) 
-            ? formData.dimensions 
-            : undefined,
-          colors: formData.colors && formData.colors.length > 0 ? formData.colors : undefined,
-          images: formData.images || undefined
-        };
-
-        return {
-          ...currentState,
-          products: currentState.products.map(product => 
-            product.id === updatedProduct.id ? updatedProduct : product
-          ),
-          currentForm: initialProductMakerState.currentForm,
-          isFormVisible: false
-        };
-      }
-
-      case 'DELETE_PRODUCT': {
-        if (!action.payload?.productId) {
-          return currentState;
-        }
-        
-        return {
-          ...currentState,
-          products: currentState.products.filter(
-            product => product.id !== action.payload!.productId
-          )
-        };
-      }
-
-      case 'RESET_FORM':
-        return {
-          ...currentState,
-          currentForm: initialProductMakerState.currentForm,
-          isFormVisible: false
-        };
-
-      default:
-        return currentState;
+// #function productListReducer
+const productListReducer = (state: ProductListState, action: types.ProductActionsType): ProductListState => {
+  switch (action.type) {
+    case 'ADD_PRODUCT': {
+      if (!action.payload?.product) return state;
+      
+      const newProduct = {
+        ...action.payload.product,
+        id: crypto.randomUUID() // Generar ID único
+      };
+      
+      return {
+        ...state,
+        products: [...state.products, newProduct]
+      };
     }
+
+    case 'UPDATE_PRODUCT':
+      if (!action.payload?.productId || !action.payload?.product) return state;
+      
+      return {
+        ...state,
+        products: state.products.map(product =>
+          product.id === action.payload!.productId
+            ? { ...action.payload!.product!, id: action.payload!.productId }
+            : product
+        )
+      };
+
+    case 'DELETE_PRODUCT':
+      if (!action.payload?.productId) return state;
+      
+      return {
+        ...state,
+        products: state.products.filter(product => product.id !== action.payload!.productId),
+        showDeleteConfirm: false,
+        productToDelete: undefined
+      };
+
+    case 'TOGGLE_DELETE_CONFIRM':
+      return {
+        ...state,
+        showDeleteConfirm: !state.showDeleteConfirm,
+        productToDelete: action.payload?.productId || undefined
+      };
+
+    default:
+      return state;
+  }
+};
+// #end-function
+
+// #hook useProductModal
+export const useProductModal = () => {
+  const [state, dispatch] = useReducer(modalFormReducer, {
+    isOpen: false,
+    formData: initialProductState,
+    isEditing: false,
+    editingProductId: undefined
+  });
+
+  const openModal = () => {
+    dispatch({ type: 'TOGGLE_FORM' });
   };
 
-  const [state, dispatch] = useReducer(reducer, initialProductMakerState);
+  const closeModal = () => {
+    dispatch({ type: 'TOGGLE_FORM' });
+  };
 
-  // Helper functions para facilitar el uso
+  const editProduct = (product: types.ProductBaseType, productId: string) => {
+    dispatch({
+      type: 'EDIT_PRODUCT',
+      payload: { product, productId }
+    });
+  };
+
   const setFormField = (field: keyof types.ProductBaseType, value: unknown) => {
     dispatch({
       type: 'SET_FORM_FIELD',
       payload: { field, value }
     });
-  };
-
-  const addProduct = () => {
-    dispatch({ type: 'ADD_PRODUCT' });
-  };
-
-  const updateProduct = () => {
-    dispatch({ type: 'UPDATE_PRODUCT' });
-  };
-
-  const deleteProduct = (productId: string) => {
-    dispatch({
-      type: 'DELETE_PRODUCT',
-      payload: { productId }
-    });
-  };
-
-  const editProduct = (product: types.ProductBaseType) => {
-    dispatch({
-      type: 'EDIT_PRODUCT',
-      payload: { product }
-    });
-  };
-
-  const resetForm = () => {
-    dispatch({ type: 'RESET_FORM' });
-  };
-
-  const toggleFormVisibility = () => {
-    dispatch({ type: 'TOGGLE_FORM' });
   };
 
   const setFormData = (formData: Partial<types.ProductBaseType>) => {
@@ -217,31 +169,147 @@ export const useProducts = () => {
     });
   };
 
-  // Nueva función para determinar si estamos editando
-  const isEditing = (): boolean => {
-    return !!(state.currentForm.id);
+  const resetForm = () => {
+    dispatch({ type: 'RESET_FORM' });
   };
 
   return {
-    // Estado
-    products: state.products,
-    currentForm: state.currentForm,
-    isFormVisible: state.isFormVisible,
-    
-    // Acciones
-    dispatch,
+    isModalOpen: state.isOpen,
+    formData: state.formData,
+    isEditing: state.isEditing,
+    editingProductId: state.editingProductId,
+    openModal,
+    closeModal,
+    editProduct,
     setFormField,
+    setFormData,
+    resetForm
+  };
+};
+// #end-hook
+
+// #hook useProductList
+export const useProductList = () => {
+  const [state, dispatch] = useReducer(productListReducer, {
+    products: [],
+    showDeleteConfirm: false,
+    productToDelete: undefined
+  });
+
+  const addProduct = (product: types.ProductBaseType) => {
+    dispatch({
+      type: 'ADD_PRODUCT',
+      payload: { product }
+    });
+  };
+
+  const updateProduct = (productId: string, product: types.ProductBaseType) => {
+    dispatch({
+      type: 'UPDATE_PRODUCT',
+      payload: { productId, product }
+    });
+  };
+
+  const deleteProduct = (productId: string) => {
+    dispatch({
+      type: 'DELETE_PRODUCT',
+      payload: { productId }
+    });
+  };
+
+  const showDeleteConfirmation = (productId: string) => {
+    dispatch({
+      type: 'TOGGLE_DELETE_CONFIRM',
+      payload: { productId }
+    });
+  };
+
+  const hideDeleteConfirmation = () => {
+    dispatch({
+      type: 'TOGGLE_DELETE_CONFIRM'
+    });
+  };
+
+  return {
+    products: state.products,
+    showDeleteConfirm: state.showDeleteConfirm,
+    productToDelete: state.productToDelete,
     addProduct,
     updateProduct,
     deleteProduct,
-    editProduct,
-    resetForm,
-    toggleFormVisibility,
-    setFormData,
-    
-    // Utilities
-    generateId,
-    generateSKU,
-    isEditing
+    showDeleteConfirmation,
+    hideDeleteConfirmation
   };
 };
+// #end-hook
+
+// #hook useProductMaker
+export const useProductMaker = () => {
+  const modal = useProductModal();
+  const productList = useProductList();
+
+  const createProduct = () => {
+    // Validar que al menos tenga nombre
+    if (!modal.formData.name.trim()) {
+      console.warn('El nombre del producto es requerido');
+      return;
+    }
+
+    if (modal.isEditing && modal.editingProductId) {
+      // Actualizar producto existente
+      productList.updateProduct(modal.editingProductId, modal.formData);
+      console.log('Producto actualizado:', modal.formData);
+    } else {
+      // Agregar nuevo producto
+      productList.addProduct(modal.formData);
+      console.log('Producto creado:', modal.formData);
+    }
+    
+    // Cerrar modal y resetear formulario
+    modal.closeModal();
+  };
+
+  const editProduct = (product: types.ProductBaseType) => {
+    if (!product.id) return;
+    modal.editProduct(product, product.id);
+  };
+
+  const confirmDeleteProduct = () => {
+    if (productList.productToDelete) {
+      productList.deleteProduct(productList.productToDelete);
+    }
+  };
+
+  return {
+    // Modal properties
+    isModalOpen: modal.isModalOpen,
+    formData: modal.formData,
+    isEditing: modal.isEditing,
+    editingProductId: modal.editingProductId,
+    
+    // Modal actions
+    openModal: modal.openModal,
+    closeModal: modal.closeModal,
+    setFormField: modal.setFormField,
+    setFormData: modal.setFormData,
+    resetForm: modal.resetForm,
+    
+    // Product list properties
+    products: productList.products,
+    showDeleteConfirm: productList.showDeleteConfirm,
+    productToDelete: productList.productToDelete,
+    
+    // Product list actions
+    addProduct: productList.addProduct,
+    updateProduct: productList.updateProduct,
+    deleteProduct: productList.deleteProduct,
+    showDeleteConfirmation: productList.showDeleteConfirmation,
+    hideDeleteConfirmation: productList.hideDeleteConfirmation,
+    
+    // Combined actions
+    createProduct,
+    editProduct,
+    confirmDeleteProduct
+  };
+};
+// #end-hook
