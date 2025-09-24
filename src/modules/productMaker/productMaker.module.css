@@ -49,8 +49,6 @@
   box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
 }
 /* #end-style */
-
-
 /* #style .productListContainer */
 .productListContainer {
   margin-top: 2rem;
@@ -91,7 +89,7 @@
 
 @media (min-width: 1600px) {
   .productGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
   }
 }
 /* #end-style */
@@ -262,7 +260,6 @@
   font-size: 1rem;
 }
 /* #end-style */
-
 /* #style .modalOverlay */
 .modalOverlay {
   position: fixed;
@@ -278,7 +275,6 @@
   backdrop-filter: blur(4px);
 }
 /* #end-style */
-
 /* #style .modalContent */
 .modalContent {
   background-color: white;
@@ -302,7 +298,6 @@
   }
 }
 /* #end-style */
-
 /* #style .modalHeader */
 .modalHeader {
   display: flex;
@@ -312,7 +307,6 @@
   border-bottom: 1px solid #e5e7eb;
 }
 /* #end-style */
-
 /* #style .modalTitle */
 .modalTitle {
   font-size: 1.25rem;
@@ -321,7 +315,6 @@
   margin: 0;
 }
 /* #end-style */
-
 /* #style .closeButton */
 .closeButton {
   background: none;
@@ -344,19 +337,16 @@
   color: #374151;
 }
 /* #end-style */
-
 /* #style .modalBody */
 .modalBody {
   padding: 1.5rem;
 }
 /* #end-style */
-
 /* #style .formGroup */
 .formGroup {
   margin-bottom: 1.5rem;
 }
 /* #end-style */
-
 /* #style .label */
 .label {
   display: block;
@@ -366,7 +356,6 @@
   margin-bottom: 0.5rem;
 }
 /* #end-style */
-
 /* #style .input */
 .input {
   width: 100%;
@@ -388,7 +377,6 @@
   color: #9ca3af;
 }
 /* #end-style */
-
 /* #style .modalActions */
 .modalActions {
   display: flex;
@@ -399,7 +387,6 @@
   border-top: 1px solid #e5e7eb;
 }
 /* #end-style */
-
 /* #style .confirmButton */
 .confirmButton {
   background-color: #3b82f6;
@@ -429,7 +416,6 @@
   transform: translateY(0);
 }
 /* #end-style */
-
 /* #style .deleteModalContent */
 .deleteModalContent {
   background-color: white;
@@ -440,14 +426,12 @@
   animation: modalSlideIn 0.3s ease-out;
 }
 /* #end-style */
-
 /* #style .deleteModalHeader */
 .deleteModalHeader {
   padding: 1.5rem;
   text-align: center;
 }
 /* #end-style */
-
 /* #style .deleteModalTitle */
 .deleteModalTitle {
   font-size: 1.125rem;
@@ -456,7 +440,6 @@
   margin: 0 0 0.75rem 0;
 }
 /* #end-style */
-
 /* #style .deleteModalMessage */
 .deleteModalMessage {
   color: #6b7280;
@@ -464,7 +447,6 @@
   margin: 0;
 }
 /* #end-style */
-
 /* #style .deleteModalActions */
 .deleteModalActions {
   display: flex;
@@ -473,7 +455,6 @@
   justify-content: center;
 }
 /* #end-style */
-
 /* #style .confirmDeleteButton */
 .confirmDeleteButton {
   background-color: #dc2626;
@@ -497,7 +478,6 @@
   transform: translateY(0);
 }
 /* #end-style */
-
 /* #style .cancelButton */
 .cancelButton {
   background-color: #f3f4f6;
@@ -521,7 +501,12 @@
   transform: translateY(0);
 }
 /* #end-style */
-
+/* #style .categoryBlock */
+.categoryBlock{
+  border: thin solid black  
+}
+/* #end-style */
+/* #style .categoryHeader */
 /* Header principal de cada categoría */
 .categoryHeader {
   position: relative;
@@ -535,15 +520,18 @@
   cursor: pointer;
   transition: background-color 120ms linear, box-shadow 120ms linear;
   box-shadow: 0 1px 0 rgba(0,0,0,0.06);
-  overflow: visible;
+  overflow: hidden;
+  min-height: 150px;
 }
-
+/* #end-style */
+/* #style .categoryHeader > * */
 /* Asegura que el contenido quede por encima del fondo dinámico */
 .categoryHeader > * {
   position: relative;
   z-index: 1;
 }
-
+/* #end-style */
+/* #style .categoryInfo */
 /* Grupo izquierdo: icono + textos */
 .categoryInfo {
   display: flex;
@@ -551,46 +539,54 @@
   gap: 12px;
   min-width: 0; /* permite truncado */
 }
-
+/* #end-style */
+/* #style .categoryImage */
 /* Imagen o placeholder pequeño dentro del header */
 .categoryImage,
 .categoryImagePlaceholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  flex: 0 0 40px;
+  width: 130px;
+  height: 130px;
+  border-radius: 8px;
+  flex: 0 0 130px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  font-size: 18px;
-  background: rgba(255,255,255,0.12); /* ligero contraste si la categoría no da buen contraste */
+  font-size: 36px;
+  background: rgba(255,255,255,0.12);
   color: inherit;
   z-index: 2;
+  object-fit: cover;
 }
-
+/* #end-style */
+/* #style .categoryImagePlaceholder */
 /* Si estabas usando inline-style en categoryImagePlaceholder para el color,
    lo puedes mantener. Si no, el header ya toma el color por inline-style. */
 .categoryImagePlaceholder {
   background-color: transparent; /* evita duplicar colores si header ya lo tiene */
 }
-
+/* #end-style */
+/* #style .categoryName */
 /* Texto del nombre y descripción */
 .categoryName {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 0.5rem 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3;
 }
-
+/* #end-style */
+/* #style .categoryDescription */
 .categoryDescription {
-  font-size: 0.85rem;
+  font-size: 1.25rem;
   margin: 0;
-  opacity: 0.95;
+  opacity: 0.9;
+  line-height: 1.4;
 }
-
+/* #end-style */
+/* #style .categoryActions */
 /* Contenedor de acciones (editar / borrar / expandir) */
 .categoryActions {
   display: flex;
@@ -598,31 +594,231 @@
   gap: 8px;
   flex-shrink: 0;
 }
-
+/* #end-style */
+/* #style .categoryActions button */
 /* Botones pequeños dentro del header */
 .categoryActions button {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.15);
   border: none;
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 10px 12px;
+  border-radius: 8px;
   color: inherit;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   line-height: 1;
+  transition: all 0.2s ease;
 }
 
+.categoryActions button:hover {
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.05);
+}
+/* #end-style */
+/* #style .categoryActions button:focus-visible */
 /* Accesibilidad: foco visible */
 .categoryActions button:focus-visible {
   outline: 2px solid rgba(255,255,255,0.18);
   outline-offset: 2px;
 }
-
+/* #end-style */
+/* #style .expandIcon */
 /* Icono de expandir / colapsar */
 .expandIcon {
-  margin-left: 8px;
-  font-size: 14px;
-  opacity: 0.98;
+  margin-left: 12px;
+  font-size: 18px;
+  opacity: 0.95;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease;
 }
+/* #end-style */
+/* #style .addProductCard */
+.addProductCard {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  /* height: 100%; */
+  color: #64748b;
+  font-weight: 500;
+  user-select: none;
+  /* Mantener la misma estructura que .productCard */
+  overflow: hidden;
+}
+
+.addProductCard:hover {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  color: white;
+}
+
+.addProductCard:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+/* #end-style */
+/* #style .addProductIcon */
+.addProductIcon {
+  font-size: 3rem;
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+  transition: transform 0.3s ease;
+}
+
+.addProductCard:hover .addProductIcon {
+  transform: scale(1.1) rotate(90deg);
+}
+/* #end-style */
+/* #style .categoryContent */
+.categoryContent {
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  min-height: auto;
+  height: auto;
+  overflow: visible;
+}
+/* #end-style */
+/* #style .categoryPreview */
+.categoryPreview {
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+/* #end-style */
+/* #style .categoryPreviewHeader */
+.categoryPreviewHeader {
+  padding: 12px 16px;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+/* #end-style */
+/* #style .categoryPreviewInfo */
+.categoryPreviewInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+/* #end-style */
+/* #style .categoryPreviewImage */
+.categoryPreviewImage {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: rgba(255, 255, 255, 0.1);
+}
+/* #end-style */
+/* #style .categoryPreviewImagePlaceholder */
+.categoryPreviewImagePlaceholder {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 16px;
+}
+/* #end-style */
+/* #style .categoryPreviewName */
+.categoryPreviewName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  opacity: 0.95;
+}
+/* #end-style */
+/* #style .categoryPreviewDescription */
+.categoryPreviewDescription {
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.8;
+  margin-top: 2px;
+}
+/* #end-style */
+/* #style .imageUploadContainer */
+.imageUploadContainer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+/* #end-style */
+/* #style .imageInput */
+.imageInput {
+  display: none;
+}
+/* #end-style */
+/* #style .imageUploadButton */
+.imageUploadButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.imageUploadButton:hover {
+  background-color: #e5e7eb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+}
+
+.imageUploadButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+/* #style .removeImageButton */
+.removeImageButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background-color: #fee2e2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #dc2626;
+  transition: all 0.2s ease;
+}
+
+.removeImageButton:hover {
+  background-color: #fecaca;
+  border-color: #fca5a5;
+  transform: translateY(-1px);
+}
+
+.removeImageButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+/* #style .imageUploadHint */
+.imageUploadHint {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin: 0.5rem 0 0 0;
+  width: 100%;
+}
+/* #end-style */

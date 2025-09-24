@@ -1,7 +1,7 @@
 // #section Imports
 import { useReducer } from 'react';
 import * as types from './productMaker.d';
-import { initialProductState, initialCustomCategoryState, defaultGeneralCategory, initialCategoryFormState } from './productMaker.config';
+import { initialProductState, initialCustomCategoryState, defaultGeneralCategory, initialCategoryFormState, acceptedImageTypes, maxImageSize } from './productMaker.config';
 // #end-section
 
 // #interface ModalState
@@ -497,6 +497,46 @@ export const useCustomCategories = () => {
     formDispatch({ type: 'RESET_CATEGORY_FORM' });
   };
 
+  // #function validateImageFile
+  const validateImageFile = (file: File): { isValid: boolean; error?: string } => {
+    if (!acceptedImageTypes.includes(file.type)) {
+      return {
+        isValid: false,
+        error: 'Formato de imagen no válido. Usa JPG, PNG, GIF o WebP.'
+      };
+    }
+    
+    if (file.size > maxImageSize) {
+      return {
+        isValid: false,
+        error: 'La imagen es muy grande. Máximo 5MB.'
+      };
+    }
+    
+    return { isValid: true };
+  };
+  // #end-function
+
+  // #function handleImageUpload
+  const handleImageUpload = (file: File): boolean => {
+    const validation = validateImageFile(file);
+    
+    if (!validation.isValid) {
+      console.warn(validation.error);
+      return false;
+    }
+    
+    setCategoryFormField('image', file);
+    return true;
+  };
+  // #end-function
+
+  // #function removeImage
+  const removeImage = () => {
+    setCategoryFormField('image', undefined);
+  };
+  // #end-function
+
   return {
     // List state
     categories: listState.categories,
@@ -523,7 +563,11 @@ export const useCustomCategories = () => {
     closeCategoryForm,
     editCategory,
     setCategoryFormField,
-    resetCategoryForm
+    resetCategoryForm,
+    
+    // Image actions
+    handleImageUpload,
+    removeImage,
   };
 };
 // #end-hook

@@ -13,37 +13,30 @@ export type ProductActionsType = {
   }
 }
 // #end-type
-
 // #type ProductCategoryType
 export type ProductCategoryType = 'food' | 'electronics' | 'books' | 'clothes' | 'home' | 'beauty' | 'sport' | 'garden' | undefined
 // #end-type
-
 // #type DimensionUnitType
 export type DimensionUnitType = 'mm' | 'cm' | 'm' | 'in'
 // #end-type
-
 // #type WeigthUnitType
 export type WeigthUnitType = 'mg' | 'g' | 'kg' | 'lb' | 'oz' | 'ton'
 // #end-type
-
 // #type MoneyTypes
 export type MoneyTypes = 'pesos' | 'usd' | 'eur'
 // #end-type
-
 // #interface DescriptionType
 export interface DescriptionType {
   main: string
   short?: string
 }
 // #end-interface
-
 // #interface ImageType
 export interface ImageType {
   main: string | File
   gallery?: (string | File)[]
 }
 // #end-interface
-
 // #interface PriceType
 export interface PriceType {
   type: MoneyTypes
@@ -54,21 +47,18 @@ export interface PriceType {
   }
 }
 // #end-interface
-
 // #interface WeightType
 export interface WeightType {
   value?: number
   unit?: WeigthUnitType
 }
 // #end-interface
-
 // #interface DimensionValue
 export interface DimensionValue {
   value: number
   unit: DimensionUnitType
 }
 // #end-interface
-
 // #interface DimensionType
 export interface DimensionType {
   height?: DimensionValue
@@ -76,7 +66,6 @@ export interface DimensionType {
   length?: DimensionValue
 }
 // #end-interface
-
 // #type ProductBaseType
 export type ProductBaseType = {
   id?: string
@@ -96,7 +85,6 @@ export type ProductBaseType = {
   sku?: string // Stock Keeping Unit (stock control) - example: NIKE-AIRZOOM-42
 }
 // #end-type
-
 // #type CustomCategoryType
 export type CustomCategoryType = {
   id: string
@@ -108,7 +96,6 @@ export type CustomCategoryType = {
   image?: string | File
 }
 // #end-type
-
 // #type CustomCategoryActionsType
 export type CustomCategoryActionsType = {
   type: 'ADD_CUSTOM_CATEGORY' | 'UPDATE_CUSTOM_CATEGORY' | 'DELETE_CUSTOM_CATEGORY' | 'TOGGLE_CATEGORY_PANEL' | 'TOGGLE_DELETE_CONFIRM' | 'TOGGLE_CATEGORY_FORM' | 'EDIT_CUSTOM_CATEGORY' | 'SET_CATEGORY_FORM_FIELD' | 'RESET_CATEGORY_FORM'  
@@ -121,7 +108,6 @@ export type CustomCategoryActionsType = {
   }
 }
 // #end-type
-
 // #interface CustomCategoryListState
 export interface CustomCategoryListState {
   categories: CustomCategoryType[]
@@ -130,7 +116,6 @@ export interface CustomCategoryListState {
   isPanelOpen: boolean
 }
 // #end-interface
-
 // #interface CustomCategoryFormState
 export interface CustomCategoryFormState {
   isOpen: boolean

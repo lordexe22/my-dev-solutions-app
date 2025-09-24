@@ -75,3 +75,18 @@ export const initialCategoryFormState: types.CustomCategoryFormState = {
   editingCategoryId: undefined
 }
 // #end-variable
+
+// #variable acceptedImageTypes
+export const acceptedImageTypes = [
+  'image/jpeg',
+  'image/jpg', 
+  'image/png',
+  'image/gif',
+  'image/webp'
+];
+// #end-variable
+
+// #variable maxImageSize
+export const maxImageSize = 5 * 1024 * 1024; // 5MB en bytes
+// #end-variable
+

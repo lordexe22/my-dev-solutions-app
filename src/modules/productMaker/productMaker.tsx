@@ -42,6 +42,8 @@ const ProductMaker = () => {
     closeCategoryForm,
     editCategory,
     setCategoryFormField,
+    handleImageUpload,
+    removeImage,
     // resetCategoryForm
   } = useCustomCategories();
   // #end-hook
@@ -339,6 +341,33 @@ const ProductMaker = () => {
               </button>
             </div>
             <div className={styles.modalBody}>
+              {/* Vista previa de la categoría */}
+              <div className={styles.categoryPreview}>
+                <div className={styles.categoryPreviewHeader} style={{ backgroundColor: categoryFormData.color || '#3b82f6' }}>
+                  <div className={styles.categoryPreviewInfo}>
+                    {categoryFormData.image ? (
+                      <img 
+                        src={typeof categoryFormData.image === 'string' ? categoryFormData.image : URL.createObjectURL(categoryFormData.image)} 
+                        alt="Vista previa" 
+                        className={styles.categoryPreviewImage} 
+                      />
+                    ) : (
+                      <div className={styles.categoryPreviewImagePlaceholder}>
+                        📁
+                      </div>
+                    )}
+                    <div>
+                      <h4 className={styles.categoryPreviewName}>
+                        {categoryFormData.name || 'Nombre de la categoría'}
+                      </h4>
+                      <p className={styles.categoryPreviewDescription}>
+                        {categoryFormData.description || 'Descripción de la categoría'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className={styles.formGroup}>
                 <label htmlFor="categoryName" className={styles.label}>
                   Nombre de la Categoría
@@ -379,6 +408,41 @@ const ProductMaker = () => {
                   value={categoryFormData.color || '#3b82f6'}
                   onChange={(e) => setCategoryFormField('color', e.target.value)}
                 />
+              </div>
+
+              <div className={styles.formGroup}>
+                <label className={styles.label}>
+                  Imagen de la Categoría
+                </label>
+                <div className={styles.imageUploadContainer}>
+                  <input
+                    type="file"
+                    id="categoryImage"
+                    className={styles.imageInput}
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleImageUpload(file);
+                      }
+                    }}
+                  />
+                  <label htmlFor="categoryImage" className={styles.imageUploadButton}>
+                    📁 Seleccionar imagen
+                  </label>
+                  {categoryFormData.image && (
+                    <button
+                      type="button"
+                      className={styles.removeImageButton}
+                      onClick={removeImage}
+                    >
+                      🗑️ Eliminar imagen
+                    </button>
+                  )}
+                </div>
+                <p className={styles.imageUploadHint}>
+                  Formatos: JPG, PNG, GIF, WebP. Máximo 5MB.
+                </p>
               </div>
               
               <div className={styles.modalActions}>
