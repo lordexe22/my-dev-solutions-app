@@ -9,6 +9,7 @@ export const initialProductState: types.ProductBaseType = {
   description: {
     main: ''
   },
+  customCategories: []
 }
 
 export const productCategories: types.ProductCategoryType[] = [
@@ -43,3 +44,34 @@ export const dimensionUnits: types.DimensionUnitType[] = [
   'm',
   'in'
 ]
+
+export const initialCustomCategoryState: types.CustomCategoryType = {
+  id: '',
+  name: '',
+  description: '',
+  color: '#3b82f6',
+  image: undefined,
+  createdAt: new Date(),
+  isExpanded: false
+}
+
+// #variable defaultGeneralCategory
+export const defaultGeneralCategory: types.CustomCategoryType = {
+  id: 'general-category',
+  name: 'General',
+  description: 'Categoría general para productos sin clasificar',
+  color: '#6b7280',
+  image: undefined,
+  createdAt: new Date(),
+  isExpanded: true
+}
+// #end-variable
+
+// #variable initialCategoryFormState
+export const initialCategoryFormState: types.CustomCategoryFormState = {
+  isOpen: false,
+  formData: initialCustomCategoryState,
+  isEditing: false,
+  editingCategoryId: undefined
+}
+// #end-variable

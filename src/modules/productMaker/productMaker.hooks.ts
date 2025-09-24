@@ -1,7 +1,7 @@
 // #section Imports
 import { useReducer } from 'react';
 import * as types from './productMaker.d';
-import { initialProductState } from './productMaker.config';
+import { initialProductState, initialCustomCategoryState, defaultGeneralCategory, initialCategoryFormState } from './productMaker.config';
 // #end-section
 
 // #interface ModalState
@@ -123,6 +123,112 @@ const productListReducer = (state: ProductListState, action: types.ProductAction
         ...state,
         showDeleteConfirm: !state.showDeleteConfirm,
         productToDelete: action.payload?.productId || undefined
+      };
+
+    default:
+      return state;
+  }
+};
+// #end-function
+
+// #function customCategoryReducer
+const customCategoryReducer = (state: types.CustomCategoryListState, action: types.CustomCategoryActionsType): types.CustomCategoryListState => {
+  switch (action.type) {
+    case 'ADD_CUSTOM_CATEGORY': {
+      if (!action.payload?.customCategory) return state;
+      
+      const newCategory = {
+        ...action.payload.customCategory,
+        id: crypto.randomUUID()
+      };
+      
+      return {
+        ...state,
+        categories: [...state.categories, newCategory]
+      };
+    }
+
+    case 'UPDATE_CUSTOM_CATEGORY':
+      if (!action.payload?.categoryId || !action.payload?.customCategory) return state;
+      
+      return {
+        ...state,
+        categories: state.categories.map(category =>
+          category.id === action.payload!.categoryId
+            ? { ...action.payload!.customCategory!, id: action.payload!.categoryId }
+            : category
+        )
+      };
+
+    case 'DELETE_CUSTOM_CATEGORY':
+      if (!action.payload?.categoryId) return state;
+      
+      return {
+        ...state,
+        categories: state.categories.filter(category => category.id !== action.payload!.categoryId),
+        showDeleteConfirm: false,
+        categoryToDelete: undefined
+      };
+
+    case 'TOGGLE_CATEGORY_PANEL':
+      return {
+        ...state,
+        isPanelOpen: !state.isPanelOpen
+      };
+
+    case 'TOGGLE_DELETE_CONFIRM':
+      return {
+        ...state,
+        showDeleteConfirm: !state.showDeleteConfirm,
+        categoryToDelete: action.payload?.categoryId || undefined
+      };
+
+    default:
+      return state;
+  }
+};
+// #end-function
+
+// #function customCategoryFormReducer
+const customCategoryFormReducer = (state: types.CustomCategoryFormState, action: types.CustomCategoryActionsType): types.CustomCategoryFormState => {
+  switch (action.type) {
+    case 'TOGGLE_CATEGORY_FORM':
+      return {
+        ...state,
+        isOpen: !state.isOpen,
+        formData: state.isOpen ? initialCustomCategoryState : state.formData,
+        isEditing: false,
+        editingCategoryId: undefined
+      };
+
+    case 'EDIT_CUSTOM_CATEGORY':
+      if (!action.payload?.customCategory || !action.payload?.categoryId) return state;
+      
+      return {
+        ...state,
+        isOpen: true,
+        isEditing: true,
+        editingCategoryId: action.payload.categoryId,
+        formData: { ...action.payload.customCategory }
+      };
+
+    case 'SET_CATEGORY_FORM_FIELD':
+      if (!action.payload?.field || action.payload.value === undefined) return state;
+      
+      return {
+        ...state,
+        formData: {
+          ...state.formData,
+          [action.payload.field]: action.payload.value
+        }
+      };
+
+    case 'RESET_CATEGORY_FORM':
+      return {
+        ...state,
+        formData: initialCustomCategoryState,
+        isEditing: false,
+        editingCategoryId: undefined
       };
 
     default:
@@ -310,6 +416,114 @@ export const useProductMaker = () => {
     createProduct,
     editProduct,
     confirmDeleteProduct
+  };
+};
+// #end-hook
+
+// #hook useCustomCategories
+export const useCustomCategories = () => {
+  const [listState, listDispatch] = useReducer(customCategoryReducer, {
+    categories: [defaultGeneralCategory],
+    showDeleteConfirm: false,
+    categoryToDelete: undefined,
+    isPanelOpen: false
+  });
+
+  const [formState, formDispatch] = useReducer(customCategoryFormReducer, initialCategoryFormState);
+
+  const addCustomCategory = (category: types.CustomCategoryType) => {
+    listDispatch({
+      type: 'ADD_CUSTOM_CATEGORY',
+      payload: { customCategory: category }
+    });
+  };
+
+  const updateCustomCategory = (categoryId: string, category: types.CustomCategoryType) => {
+    listDispatch({
+      type: 'UPDATE_CUSTOM_CATEGORY',
+      payload: { categoryId, customCategory: category }
+    });
+  };
+
+  const deleteCustomCategory = (categoryId: string) => {
+    listDispatch({
+      type: 'DELETE_CUSTOM_CATEGORY',
+      payload: { categoryId }
+    });
+  };
+
+  const toggleCategoryPanel = () => {
+    listDispatch({
+      type: 'TOGGLE_CATEGORY_PANEL'
+    });
+  };
+
+  const showDeleteConfirmation = (categoryId: string) => {
+    listDispatch({
+      type: 'TOGGLE_DELETE_CONFIRM',
+      payload: { categoryId }
+    });
+  };
+
+  const hideDeleteConfirmation = () => {
+    listDispatch({
+      type: 'TOGGLE_DELETE_CONFIRM'
+    });
+  };
+
+  const openCategoryForm = () => {
+    formDispatch({ type: 'TOGGLE_CATEGORY_FORM' });
+  };
+
+  const closeCategoryForm = () => {
+    formDispatch({ type: 'TOGGLE_CATEGORY_FORM' });
+  };
+
+  const editCategory = (category: types.CustomCategoryType, categoryId: string) => {
+    formDispatch({
+      type: 'EDIT_CUSTOM_CATEGORY',
+      payload: { customCategory: category, categoryId }
+    });
+  };
+
+  const setCategoryFormField = (field: keyof types.CustomCategoryType, value: unknown) => {
+    formDispatch({
+      type: 'SET_CATEGORY_FORM_FIELD',
+      payload: { field, value }
+    });
+  };
+
+  const resetCategoryForm = () => {
+    formDispatch({ type: 'RESET_CATEGORY_FORM' });
+  };
+
+  return {
+    // List state
+    categories: listState.categories,
+    showDeleteConfirm: listState.showDeleteConfirm,
+    categoryToDelete: listState.categoryToDelete,
+    isPanelOpen: listState.isPanelOpen,
+    
+    // Form state
+    isCategoryFormOpen: formState.isOpen,
+    categoryFormData: formState.formData,
+    isCategoryEditing: formState.isEditing,
+    editingCategoryId: formState.editingCategoryId,
+    
+    // List actions
+    addCustomCategory,
+    updateCustomCategory,
+    deleteCustomCategory,
+    toggleCategoryPanel,
+    showDeleteConfirmation,
+    hideDeleteConfirmation,
+    
+    // Form actions
+    openCategoryForm,
+    closeCategoryForm,
+    editCategory,
+    setCategoryFormField,
+    resetCategoryForm
   };
 };
 // #end-hook

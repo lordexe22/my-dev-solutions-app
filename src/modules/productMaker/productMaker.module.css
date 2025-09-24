@@ -51,3 +51,578 @@
 /* #end-style */
 
 
+/* #style .productListContainer */
+.productListContainer {
+  margin-top: 2rem;
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+/* #end-style */
+/* #style .productListTitle */
+.productListTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  margin-top: 0;
+}
+/* #end-style */
+/* #style .productGrid */
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .productGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1200px) {
+  .productGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1600px) {
+  .productGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+/* #end-style */
+/* #style .productCard */
+.productCard {
+  background-color: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.productCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: #3b82f6;
+}
+/* #end-style */
+/* #style .productImageContainer */
+.productImageContainer {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+/* #end-style */
+/* #style .productImagePlaceholder */
+.productImagePlaceholder {
+  font-size: 3rem;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #f9fafb 25%, transparent 25%), 
+              linear-gradient(-45deg, #f9fafb 25%, transparent 25%), 
+              linear-gradient(45deg, transparent 75%, #f9fafb 75%), 
+              linear-gradient(-45deg, transparent 75%, #f9fafb 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+/* #end-style */
+/* #style .productInfo */
+.productInfo {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.75rem;
+}
+/* #end-style */
+/* #style .productName */
+.productName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* #end-style */
+/* #style .productPrice */
+.productPrice {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #059669;
+  margin: 0;
+  letter-spacing: 0.025em;
+}
+/* #end-style */
+/* #style .productDescription */
+.productDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+/* #end-style */
+/* #style .productActions */
+.productActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+}
+/* #end-style */
+/* #style .editButton */
+.editButton {
+  flex: 1;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editButton:hover {
+  background-color: #d97706;
+  transform: translateY(-1px);
+}
+
+.editButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+/* #style .deleteButton */
+.deleteButton {
+  flex: 1;
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteButton:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.deleteButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+/* #style .emptyState */
+.emptyState {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.emptyState h3 {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #374151;
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 1rem;
+}
+/* #end-style */
+
+/* #style .modalOverlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+/* #end-style */
+
+/* #style .modalContent */
+.modalContent {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+/* #end-style */
+
+/* #style .modalHeader */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+/* #end-style */
+
+/* #style .modalTitle */
+.modalTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+/* #end-style */
+
+/* #style .closeButton */
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+/* #end-style */
+
+/* #style .modalBody */
+.modalBody {
+  padding: 1.5rem;
+}
+/* #end-style */
+
+/* #style .formGroup */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+/* #end-style */
+
+/* #style .label */
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+/* #end-style */
+
+/* #style .input */
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+/* #end-style */
+
+/* #style .modalActions */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+/* #end-style */
+
+/* #style .confirmButton */
+.confirmButton {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.confirmButton:hover:not(:disabled) {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.confirmButton:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.confirmButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+/* #end-style */
+
+/* #style .deleteModalContent */
+.deleteModalContent {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  animation: modalSlideIn 0.3s ease-out;
+}
+/* #end-style */
+
+/* #style .deleteModalHeader */
+.deleteModalHeader {
+  padding: 1.5rem;
+  text-align: center;
+}
+/* #end-style */
+
+/* #style .deleteModalTitle */
+.deleteModalTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin: 0 0 0.75rem 0;
+}
+/* #end-style */
+
+/* #style .deleteModalMessage */
+.deleteModalMessage {
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+/* #end-style */
+
+/* #style .deleteModalActions */
+.deleteModalActions {
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem 1.5rem;
+  justify-content: center;
+}
+/* #end-style */
+
+/* #style .confirmDeleteButton */
+.confirmDeleteButton {
+  background-color: #dc2626;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.confirmDeleteButton:hover {
+  background-color: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.confirmDeleteButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+
+/* #style .cancelButton */
+.cancelButton {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 100px;
+}
+
+.cancelButton:hover {
+  background-color: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.cancelButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+
+/* Header principal de cada categoría */
+.categoryHeader {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: #ffffff; /* texto sobre fondo coloreado */
+  cursor: pointer;
+  transition: background-color 120ms linear, box-shadow 120ms linear;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+  overflow: visible;
+}
+
+/* Asegura que el contenido quede por encima del fondo dinámico */
+.categoryHeader > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Grupo izquierdo: icono + textos */
+.categoryInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0; /* permite truncado */
+}
+
+/* Imagen o placeholder pequeño dentro del header */
+.categoryImage,
+.categoryImagePlaceholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 18px;
+  background: rgba(255,255,255,0.12); /* ligero contraste si la categoría no da buen contraste */
+  color: inherit;
+  z-index: 2;
+}
+
+/* Si estabas usando inline-style en categoryImagePlaceholder para el color,
+   lo puedes mantener. Si no, el header ya toma el color por inline-style. */
+.categoryImagePlaceholder {
+  background-color: transparent; /* evita duplicar colores si header ya lo tiene */
+}
+
+/* Texto del nombre y descripción */
+.categoryName {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.categoryDescription {
+  font-size: 0.85rem;
+  margin: 0;
+  opacity: 0.95;
+}
+
+/* Contenedor de acciones (editar / borrar / expandir) */
+.categoryActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Botones pequeños dentro del header */
+.categoryActions button {
+  background: rgba(255,255,255,0.08);
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* Accesibilidad: foco visible */
+.categoryActions button:focus-visible {
+  outline: 2px solid rgba(255,255,255,0.18);
+  outline-offset: 2px;
+}
+
+/* Icono de expandir / colapsar */
+.expandIcon {
+  margin-left: 8px;
+  font-size: 14px;
+  opacity: 0.98;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
