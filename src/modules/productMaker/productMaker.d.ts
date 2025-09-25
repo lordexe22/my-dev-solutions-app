@@ -81,7 +81,8 @@ export type ProductBaseType = {
   weight?: WeightType
   dimensions?: DimensionType
   colors?: string[]
-  stock?: number
+  stock?: number,
+  lowStockThreshold?: number // umbral personalizado para cada producto
   sku?: string // Stock Keeping Unit (stock control) - example: NIKE-AIRZOOM-42
 }
 // #end-type

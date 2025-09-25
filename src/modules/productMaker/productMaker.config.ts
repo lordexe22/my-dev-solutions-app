@@ -9,7 +9,13 @@ export const initialProductState: types.ProductBaseType = {
   description: {
     main: ''
   },
-  customCategories: []
+  customCategories: [],
+  available: true, 
+  stock: 0, 
+  images: {
+    main: '',
+    gallery: []
+  }
 }
 
 export const productCategories: types.ProductCategoryType[] = [

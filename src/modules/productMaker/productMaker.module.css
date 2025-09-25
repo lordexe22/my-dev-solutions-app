@@ -1,3 +1,24 @@
+/* #variable .container (custom properties) */
+.container {
+  /* #section window-breakpoints */
+  /* #info - cannot use custom-vars in @media, must be static values written inside 
+      example: @media (width > 480px) and (width <=1024px) {...} */
+  /* values: 0 < 480px < 800px < 1024px < 1200px < 1600px < 1920px < 2560px < 3840px */
+  /* #end-section */
+
+  /* #section cards */
+  --card-bg-color: #efefff;  
+  --card-border-color-hover: #3286fc;
+
+  --card-max-width-small: 200px;
+  --card-max-width-medium: 250px;
+  --card-max-width-large: 300px;
+  --card-max-width-xlarge: 350px;
+  /* #end-section */
+
+
+}
+/* #end-variable */
 /* #style .container */
 .container {
   padding: 2rem;
@@ -71,8 +92,9 @@
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-auto-rows: minmax(320px, auto); /* Esto fuerza una altura mínima consistente */
   gap: 1.5rem;
-  margin-top: 1rem;
+  /* margin-top: 1rem; */
 }
 
 @media (min-width: 768px) {
@@ -95,7 +117,8 @@
 /* #end-style */
 /* #style .productCard */
 .productCard {
-  background-color: white;
+  position: relative; /* new */
+  background-color: var(--card-bg-color);
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   overflow: hidden;
@@ -104,14 +127,152 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+
 }
 
 .productCard:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  border-color: #3b82f6;
+  border-color: var(--card-border-color-hover);
 }
 /* #end-style */
+
+
+/* #style .productImagesAndStatus */
+/* contenedor horizontal de miniaturas */
+.imagesContainer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--pm-thumb-gap, 8px);
+  overflow-x: auto;
+  padding: 8px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* wrapper genérico de cada imagen */
+.imageWrapper {
+  position: relative;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  transition: transform 0.12s ease;
+}
+
+/* variante para la imagen principal (más grande) */
+.imageWrapper.mainImage {
+  width: var(--pm-main-image-size, 140px);
+  height: var(--pm-main-image-size, 140px);
+  flex: 0 0 var(--pm-main-image-size, 140px);
+}
+
+/* miniaturas secundarias (todas en una fila) */
+.imageWrapper:not(.mainImage) {
+  width: var(--pm-thumb-size, 72px);
+  height: var(--pm-thumb-size, 72px);
+}
+
+/* elemento <img> dentro de cada wrapper */
+.imagePreview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* acciones en overlay dentro de cada miniatura */
+.imageActions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+
+/* botones: eliminar y establecer como principal */
+.removeImageButton,
+.setMainButton {
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.removeImageButton {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.setMainButton {
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+/* efecto ligero al pasar el mouse */
+.imageWrapper:hover {
+  transform: translateY(-2px);
+}
+
+/* scrollbar discreto para la fila de miniaturas */
+.imagesContainer::-webkit-scrollbar {
+  height: 8px;
+}
+.imagesContainer::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+
+/* estados visuales de las cards */
+
+/* bajo stock: borde/amrillo distintivo */
+.productCardLowStock {
+  border-color: #f59e0b; /* amber */
+  border-width: thick;
+  box-shadow: 0 6px 16px rgba(245, 158, 11, 0.06);
+}
+
+/* no disponible: rojo y leve desaturado */
+.productCardUnavailable {
+  border-color: #ef4444; /* red */
+  border-width: thick;
+  opacity: 0.9;
+  filter: grayscale(0.12);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.04);
+}
+
+/* badge opcional (si agregás markup <span class="statusBadge">...) */
+.statusBadge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  z-index: 4;
+  pointer-events: none;
+}
+/* #end-style */
+
+
+
+
+
 /* #style .productImageContainer */
 .productImageContainer {
   width: 100%;
@@ -365,6 +526,11 @@
   font-size: 1rem;
   transition: all 0.2s ease;
   box-sizing: border-box;
+}
+.input[type="color"]{
+  padding: 5px;
+  height: 40px;
+  width: 100%;
 }
 
 .input:focus {
@@ -642,16 +808,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  /* height: 100%; */
   color: #64748b;
   font-weight: 500;
   user-select: none;
-  /* Mantener la misma estructura que .productCard */
   overflow: hidden;
+  height: 100%; 
 }
 
 .addProductCard:hover {
@@ -820,5 +985,127 @@
   color: #6b7280;
   margin: 0.5rem 0 0 0;
   width: 100%;
+}
+/* #end-style */
+/* #style .categorySelector */
+.categorySelector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+}
+/* #end-style */
+/* #style .categoryCheckbox */
+.categoryCheckbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.categoryCheckbox:hover {
+  background-color: #f3f4f6;
+}
+
+.categoryCheckbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+/* #end-style */
+/* #style .tagInputContainer */
+.tagInputContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.tagInputContainer .input {
+  flex: 1;
+  margin: 0;
+}
+/* #end-style */
+/* #style .addTagButton */
+.addTagButton {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.addTagButton:hover {
+  background-color: #2563eb;
+  transform: translateY(-1px);
+}
+
+.addTagButton:active {
+  transform: translateY(0);
+}
+/* #end-style */
+/* #style .tagsContainer */
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  min-height: 40px;
+}
+/* #end-style */
+/* #style .tag */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+/* #end-style */
+/* #style .removeTagButton */
+.removeTagButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  padding: 0;
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1;
+  transition: color 0.2s ease;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeTagButton:hover {
+  color: white;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
 }
 /* #end-style */

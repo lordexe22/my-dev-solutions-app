@@ -1,6 +1,7 @@
 // #section Imports
 import styles from './productMaker.module.css';
 import { useProductMaker, useCustomCategories } from './productMaker.hooks';
+import React from 'react';
 // #end-section
 
 // #component ProductMaker
@@ -20,7 +21,18 @@ const ProductMaker = () => {
     productToDelete,
     showDeleteConfirmation,
     hideDeleteConfirmation,
-    confirmDeleteProduct
+    confirmDeleteProduct,
+    addCategoryToProduct,
+    removeCategoryFromProduct,
+    addTag,
+    removeTag,
+    pm_handleImageUpload,
+    pm_removeImage,
+    pm_setMainImage,
+    pm_reorderImages,
+    pm_updateStock,
+    pm_toggleAvailability,
+    pm_setLowStockThreshold
   } = useProductMaker();
   // #end-hook
 
@@ -47,6 +59,10 @@ const ProductMaker = () => {
     // resetCategoryForm
   } = useCustomCategories();
   // #end-hook
+
+  // #state [tagInput, setTagInput] = '' 
+  const [tagInput, setTagInput] = React.useState('');
+  // #end-state
 
   // #function formatPrice
   const formatPrice = (price: { type: string; value: number }) => {
@@ -154,7 +170,7 @@ const ProductMaker = () => {
               {/* #end-section */}
               {/* #section Category Content */}
               {category.isExpanded && (
-                <div className={styles.categoryContent}>
+                <div className={styles.categoryContent} style={{ backgroundColor: category.color + '20' }}>
                   <div className={styles.productGrid}>
                     {/* #section Add Product Button */}
                     <div className={styles.addProductCard} onClick={() => {
@@ -166,42 +182,58 @@ const ProductMaker = () => {
                     </div>
                     {/* #end-section */}
                     
-                    {/* #section Products */}
-                    {categoryProducts.map((product) => (
-                      <div key={product.id} className={styles.productCard}>
-                        <div className={styles.productImageContainer}>
-                          <div className={styles.productImagePlaceholder}>
-                            📷
-                          </div>
-                        </div>
-                        <div className={styles.productInfo}>
-                          <h3 className={styles.productName}>{product.name}</h3>
-                          <p className={styles.productPrice}>
-                            {formatPrice(product.price)}
-                          </p>
-                          {product.description.main && (
-                            <p className={styles.productDescription}>
-                              {product.description.main}
-                            </p>
-                          )}
-                          <div className={styles.productActions}>
-                            <button
-                              className={styles.editButton}
-                              onClick={() => editProduct(product)}
-                            >
-                              Editar
-                            </button>
-                            <button
-                              className={styles.deleteButton}
-                              onClick={() => product.id && showDeleteConfirmation(product.id)}
-                            >
-                              Eliminar
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                    {/* #end-section */}
+{/* #section Products */}
+{categoryProducts.map((product) => (
+  <div
+    key={product.id}
+    className={`
+      ${styles.productCard}
+      ${product.stock !== undefined && product.lowStockThreshold !== undefined && product.stock <= product.lowStockThreshold ? styles.productCardLowStock : ''}
+      ${product.available === false ? styles.productCardUnavailable : ''}
+    `}
+  >
+    <div className={styles.productImageContainer}>
+      <div className={styles.productImagePlaceholder}>
+        {product.images?.main ? (
+          <img
+            src={typeof product.images.main === 'string' ? product.images.main : URL.createObjectURL(product.images.main)}
+            alt={product.name}
+            className={styles.productImage}
+          />
+        ) : (
+          '📷'
+        )}
+      </div>
+    </div>
+    <div className={styles.productInfo}>
+      <h3 className={styles.productName}>{product.name}</h3>
+      <p className={styles.productPrice}>
+        {formatPrice(product.price)}
+      </p>
+      {product.description.main && (
+        <p className={styles.productDescription}>
+          {product.description.main}
+        </p>
+      )}
+      <div className={styles.productActions}>
+        <button
+          className={styles.editButton}
+          onClick={() => editProduct(product)}
+        >
+          Editar
+        </button>
+        <button
+          className={styles.deleteButton}
+          onClick={() => product.id && showDeleteConfirmation(product.id)}
+        >
+          Eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+{/* #end-section */}
+ 
                   </div>
                 </div>
               )}
@@ -213,87 +245,266 @@ const ProductMaker = () => {
       </div>
       {/* #end-section */}
 
-      {/* #section Modal form */}
-      {isModalOpen && (        
-        <div className={styles.modalOverlay} onClick={closeModal}>
-          <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h2 className={styles.modalTitle}>
-                {isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}
-              </h2>
-              <button 
-                className={styles.closeButton}
-                onClick={closeModal}
-              >
-                ✕
-              </button>
-            </div>
-            <div className={styles.modalBody}>
-              <div className={styles.formGroup}>
-                <label htmlFor="productName" className={styles.label}>
-                  Nombre del Producto
-                </label>
-                <input
-                  id="productName"
-                  type="text"
-                  className={styles.input}
-                  value={formData.name}
-                  onChange={(e) => setFormField('name', e.target.value)}
-                  placeholder="Ingresa el nombre del producto"
-                  autoFocus
-                />
-              </div>
+{/* #section Modal form */}
+{isModalOpen && (        
+  <div className={styles.modalOverlay} onClick={closeModal}>
+    <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+      <div className={styles.modalHeader}>
+        <h2 className={styles.modalTitle}>
+          {isEditing ? 'Editar Producto' : 'Crear Nuevo Producto'}
+        </h2>
+        <button 
+          className={styles.closeButton}
+          onClick={closeModal}
+        >
+          ✕
+        </button>
+      </div>
+      <div className={styles.modalBody}>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="productDescription" className={styles.label}>
-                  Descripción
-                </label>
-                <input
-                  id="productDescription"
-                  type="text"
-                  className={styles.input}
-                  value={formData.description.main}
-                  onChange={(e) => setFormField('description', { 
-                    ...formData.description, 
-                    main: e.target.value 
-                  })}
-                  placeholder="Descripción del producto"
-                />
-              </div>
+        {/* Nombre */}
+        <div className={styles.formGroup}>
+          <label htmlFor="productName" className={styles.label}>
+            Nombre del Producto
+          </label>
+          <input
+            id="productName"
+            type="text"
+            className={styles.input}
+            value={formData.name}
+            onChange={(e) => setFormField('name', e.target.value)}
+            placeholder="Ingresa el nombre del producto"
+            autoFocus
+          />
+        </div>
 
-              <div className={styles.formGroup}>
-                <label htmlFor="productPrice" className={styles.label}>
-                  Precio
-                </label>
+        {/* Descripción */}
+        <div className={styles.formGroup}>
+          <label htmlFor="productDescription" className={styles.label}>
+            Descripción
+          </label>
+          <input
+            id="productDescription"
+            type="text"
+            className={styles.input}
+            value={formData.description.main}
+            onChange={(e) => setFormField('description', { 
+              ...formData.description, 
+              main: e.target.value 
+            })}
+            placeholder="Descripción del producto"
+          />
+        </div>
+
+        {/* Precio */}
+        <div className={styles.formGroup}>
+          <label htmlFor="productPrice" className={styles.label}>
+            Precio
+          </label>
+          <input
+            id="productPrice"
+            type="number"
+            min="0"
+            step="0.01"
+            className={styles.input}
+            value={formData.price.value}
+            onChange={(e) => setFormField('price', {
+              ...formData.price,
+              value: parseFloat(e.target.value) || 0
+            })}
+            placeholder="0.00"
+          />
+        </div>
+
+        {/* Categorías */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            Categorías
+          </label>
+          <div className={styles.categorySelector}>
+            {categories.map((category) => (
+              <label key={category.id} className={styles.categoryCheckbox}>
                 <input
-                  id="productPrice"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  className={styles.input}
-                  value={formData.price.value}
-                  onChange={(e) => setFormField('price', {
-                    ...formData.price,
-                    value: parseFloat(e.target.value) || 0
-                  })}
-                  placeholder="0.00"
+                  type="checkbox"
+                  checked={(formData.customCategories || []).includes(category.id)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      addCategoryToProduct(category.id);
+                    } else {
+                      removeCategoryFromProduct(category.id);
+                    }
+                  }}
                 />
-              </div>
-              
-              <div className={styles.modalActions}>
-                <button
-                  className={styles.confirmButton}
-                  onClick={createProduct}
-                  disabled={!formData.name.trim()}
-                >
-                  {isEditing ? 'Actualizar Producto' : 'Crear Producto'}
-                </button>
-              </div>
-            </div>
+                <span style={{ color: category.color }}>{category.name}</span>
+              </label>
+            ))}
           </div>
         </div>
-      )}
-      {/* #end-section */}
+
+        {/* Etiquetas */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>
+            Etiquetas
+          </label>
+          <div className={styles.tagInputContainer}>
+            <input
+              type="text"
+              className={styles.input}
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              placeholder="Agregar etiqueta"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addTag(tagInput);
+                  setTagInput('');
+                }
+              }}
+            />
+            <button
+              type="button"
+              className={styles.addTagButton}
+              onClick={() => {
+                addTag(tagInput);
+                setTagInput('');
+              }}
+            >
+              Agregar
+            </button>
+          </div>
+          {formData.tags && formData.tags.length > 0 && (
+            <div className={styles.tagsContainer}>
+              {formData.tags.map((tag, index) => (
+                <span key={index} className={styles.tag}>
+                  {tag}
+                  <button
+                    type="button"
+                    className={styles.removeTagButton}
+                    onClick={() => removeTag(tag)}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Imágenes con Drag & Drop nativo */}
+        <div className={styles.formGroup}>
+          <label className={styles.label}>Imágenes</label>
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => e.target.files && pm_handleImageUpload(e.target.files)}
+          />
+          {formData.images && (formData.images.main || formData.images.gallery?.length) && (
+            <div className={styles.imagesContainer}>
+              {[formData.images.main, ...(formData.images.gallery || [])].map((img, index) => {
+                if (!img) return null;
+                return (
+                  <div
+                    key={index}
+                    className={`${styles.imageWrapper} ${index === 0 ? styles.mainImage : ''}`}
+                    draggable
+                    onDragStart={(e) => e.dataTransfer.setData('text/plain', index.toString())}
+                    onDragOver={(e) => e.preventDefault()}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      const sourceIndex = parseInt(e.dataTransfer.getData('text/plain'), 10);
+                      pm_reorderImages(sourceIndex, index);
+                      if (index === 0) pm_setMainImage(sourceIndex);
+                    }}
+                  >
+                    <img
+                      src={typeof img === 'string' ? img : URL.createObjectURL(img)}
+                      alt={`Imagen ${index + 1}`}
+                      className={styles.imagePreview}
+                    />
+                    <div className={styles.imageActions}>
+                      {index !== 0 && (
+                        <button
+                          type="button"
+                          className={styles.setMainButton}
+                          onClick={() => pm_setMainImage(index)}
+                        >
+                          Principal
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className={styles.removeImageButton}
+                        onClick={() => pm_removeImage(index, index === 0)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Stock */}
+        <div className={styles.formGroup}>
+          <label htmlFor="productStock" className={styles.label}>
+            Stock
+          </label>
+          <input
+            id="productStock"
+            type="number"
+            min="0"
+            className={styles.input}
+            value={formData.stock ?? 0}
+            onChange={(e) => pm_updateStock(parseInt(e.target.value, 10) || 0)}
+          />
+        </div>
+
+        {/* Disponibilidad */}
+        <div className={styles.formGroup}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={formData.available ?? true}
+              onChange={(e) => pm_toggleAvailability(e.target.checked)}
+            />
+            Disponible para la venta
+          </label>
+        </div>
+
+        {/* Umbral de stock bajo */}
+        <div className={styles.formGroup}>
+          <label htmlFor="lowStockThreshold" className={styles.label}>
+            Umbral de Stock Bajo
+          </label>
+          <input
+            id="lowStockThreshold"
+            type="number"
+            min="0"
+            className={styles.input}
+            value={formData.lowStockThreshold ?? 0}
+            onChange={(e) => pm_setLowStockThreshold(parseInt(e.target.value, 10) || 0)}
+            placeholder="Ej: 5"
+          />
+        </div>
+
+        <div className={styles.modalActions}>
+          <button
+            className={styles.confirmButton}
+            onClick={createProduct}
+            disabled={!formData.name.trim()}
+          >
+            {isEditing ? 'Actualizar Producto' : 'Crear Producto'}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+{/* #end-section */}
+
 
       {/* #section Delete Confirmation Modal */}
       {showDeleteConfirm && (

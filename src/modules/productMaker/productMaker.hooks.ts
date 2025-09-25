@@ -386,6 +386,130 @@ export const useProductMaker = () => {
     }
   };
 
+  // #function addCategoryToProduct - dentro del hook useProductMaker
+  const addCategoryToProduct = (categoryId: string) => {
+    const currentCategories = modal.formData.customCategories || [];
+    if (!currentCategories.includes(categoryId)) {
+      modal.setFormField('customCategories', [...currentCategories, categoryId]);
+    }
+  };
+
+  const removeCategoryFromProduct = (categoryId: string) => {
+    const currentCategories = modal.formData.customCategories || [];
+    modal.setFormField('customCategories', currentCategories.filter(id => id !== categoryId));
+  };
+
+  const addTag = (tag: string) => {
+    const trimmedTag = tag.trim();
+    if (!trimmedTag) return;
+    
+    const currentTags = modal.formData.tags || [];
+    if (!currentTags.includes(trimmedTag)) {
+      modal.setFormField('tags', [...currentTags, trimmedTag]);
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    const currentTags = modal.formData.tags || [];
+    modal.setFormField('tags', currentTags.filter(tag => tag !== tagToRemove));
+  };
+  // #end-function
+
+  // #function handleImageUpload
+const pm_handleImageUpload = (files: FileList | File[]) => {
+  const currentImages = modal.formData.images || { main: '', gallery: [] };
+  const filesArray = Array.from(files);
+
+  // Calcular cuántas imágenes podemos agregar (1 main + hasta 5 adicionales)
+  const maxTotalImages = 6;
+  const usedSlots = (currentImages.main ? 1 : 0) + (currentImages.gallery?.length || 0);
+  const availableSlots = maxTotalImages - usedSlots;
+
+  const newFiles = filesArray.slice(0, availableSlots);
+
+  let newMain = currentImages.main;
+  const newGallery = [...(currentImages.gallery || [])];
+
+  newFiles.forEach((file) => {
+    if (!acceptedImageTypes.includes(file.type) || file.size > maxImageSize) {
+      console.warn(`Imagen ${file.name} no válida`);
+      return;
+    }
+
+    if (!newMain) {
+      // Primera imagen disponible se convierte en main si no existe
+      newMain = file;
+    } else {
+      newGallery.push(file);
+    }
+  });
+
+  modal.setFormField('images', { main: newMain, gallery: newGallery });
+};
+// #end-function
+
+// #function removeImage
+const pm_removeImage = (index: number, isMain: boolean = false) => {
+  const currentImages = modal.formData.images;
+  if (!currentImages) return;
+
+  if (isMain) {
+    // Si eliminamos la principal, la primera de la galería pasa a ser main
+    const newMain = currentImages.gallery?.[0] || '';
+    const newGallery = currentImages.gallery?.slice(1) || [];
+    modal.setFormField('images', { main: newMain, gallery: newGallery });
+  } else {
+    // Eliminar de galería
+    const newGallery = currentImages.gallery?.filter((_, i) => i !== index) || [];
+    modal.setFormField('images', { ...currentImages, gallery: newGallery });
+  }
+};
+
+  const pm_setMainImage = (imageIndex: number) => {
+    const currentImages = modal.formData.images;
+    if (!currentImages?.gallery?.[imageIndex]) return;
+    
+    const newMain = currentImages.gallery[imageIndex];
+    const newGallery = [
+      currentImages.main,
+      ...currentImages.gallery.filter((_, i) => i !== imageIndex)
+    ].filter(img => img) as (string | File)[];
+    
+    modal.setFormField('images', { main: newMain, gallery: newGallery });
+  };
+
+  const pm_reorderImages = (startIndex: number, endIndex: number) => {
+    const currentImages = modal.formData.images;
+    if (!currentImages?.gallery) return;
+    
+    const allImages = [currentImages.main, ...currentImages.gallery].filter(img => img);
+    const [removed] = allImages.splice(startIndex, 1);
+    allImages.splice(endIndex, 0, removed);
+    
+    const [newMain, ...newGallery] = allImages;
+    modal.setFormField('images', { main: newMain, gallery: newGallery });
+  };
+  // #end-function
+
+  // #function stockAndAvailability
+  const pm_updateStock = (newStock: number) => {
+    modal.setFormField('stock', Math.max(0, Math.floor(newStock)));
+    
+    // Auto-deshabilitar si stock llega a 0
+    if (newStock <= 0) {
+      modal.setFormField('available', false);
+    }
+  };
+
+  const pm_toggleAvailability = (available: boolean) => {
+    modal.setFormField('available', available);
+  };
+
+  const pm_setLowStockThreshold = (threshold: number) => {
+    modal.setFormField('lowStockThreshold', Math.max(0, Math.floor(threshold)));
+  };
+  // #end-function
+
   return {
     // Modal properties
     isModalOpen: modal.isModalOpen,
@@ -415,7 +539,24 @@ export const useProductMaker = () => {
     // Combined actions
     createProduct,
     editProduct,
-    confirmDeleteProduct
+    confirmDeleteProduct,
+
+    // Agregar al return del hook useProductMaker después de confirmDeleteProduct
+    addCategoryToProduct,
+    removeCategoryFromProduct,
+    addTag,
+    removeTag,
+
+    // Image management
+    pm_handleImageUpload,
+    pm_removeImage,
+    pm_setMainImage,
+    pm_reorderImages,
+
+    // Stock and availability
+    pm_updateStock,
+    pm_toggleAvailability,
+    pm_setLowStockThreshold
   };
 };
 // #end-hook
