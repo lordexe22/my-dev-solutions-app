@@ -8,6 +8,7 @@
 /* #style .container */
 .container{
   width: 100%;
+  padding: 10px;
   display: flex;
   border: medium solid black;
   box-sizing: border-box;

@@ -5,6 +5,7 @@ import { useTags } from "./myCustomTag.hooks";
 import { DEFAULT_TAG_PROPS, DEFAULT_TAG_CONFIG } from "./myCustomTag.config";
 import type { TagBase, TagMode, TagSize } from "./myCustomTag.d";
 import styles from './myCustomTag.module.css';
+import ModalConfirm from "../modalConfirm/modalConfirm";
 // #end-section
 // #type MyCustomTagProps 
 type MyCustomTagProps = {
@@ -17,6 +18,7 @@ const MyCustomTag: React.FC<MyCustomTagProps> = ({ tags, mode = DEFAULT_TAG_CONF
   // #variable labelSize
   const labelSize: TagSize = DEFAULT_TAG_CONFIG.size;
   // #end-variable
+  const [confirmDeleteIndex, setConfirmDeleteIndex] = React.useState<number | null>(null);
   // #hook useTags
   const { tagList, createTag, updateTag, removeTag } = useTags(tags);
   // #end-hook
@@ -76,13 +78,24 @@ const MyCustomTag: React.FC<MyCustomTagProps> = ({ tags, mode = DEFAULT_TAG_CONF
               </button>
               {/* #end-section */}
               {/* #section remove-button */}
-              <button
-                type="button"
-                className={styles['remove-button']}
-                onClick={() => removeTag(index)}
-              >
-                ✕
-              </button>
+              <>
+                <button
+                  type="button"
+                  className={styles['remove-button']}
+                  onClick={() => setConfirmDeleteIndex(index)} // Open modal on click
+                >
+                  ✕
+                </button>
+                <ModalConfirm
+                  message="¿Seguro que querés eliminar esta etiqueta?"
+                  isOpen={confirmDeleteIndex === index}
+                  onConfirm={() => {
+                    removeTag(index); 
+                    setConfirmDeleteIndex(null); // Close modal after confirming
+                  }}
+                  onCancel={() => setConfirmDeleteIndex(null)} // Close modal after cancelling
+                />
+              </>
               {/* #end-section */}
             </div>
             // #end-section
