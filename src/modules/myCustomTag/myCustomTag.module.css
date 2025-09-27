@@ -1,0 +1,92 @@
+/* #variable custom-vars */ 
+.container{
+  --small-label-size: 30px;
+  --medium-label-size: 40px;
+  --large-label-size: 50px; 
+}
+/* #end-variable */
+/* #style .container */
+.container{
+  width: 100%;
+  display: flex;
+  border: medium solid black;
+  box-sizing: border-box;
+  gap: 10px;
+  flex-wrap: wrap; /* Allow wrapping of tags to new rows */
+}
+/* #end-style */
+/* #style .add-button */
+.add-button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  border-radius: 5px;
+} 
+& :hover {
+  opacity: 1;
+}
+/* #end-style */
+/* #style .tag-item */
+.tag-item {
+  display: flex;
+  border-radius: 5px;
+  padding: 5px;
+  gap: 10px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+}
+/* #end-style */
+/* #style .tag-label */
+.tag-label {
+  white-space: nowrap; /* Prevent label from breaking into multiple lines */
+}
+/* #end-style */
+/* #style .tag-buttons.container */
+.tag-buttons-container {
+  display: flex;
+  gap: 5px;
+}
+/* #end-style */
+/* #style .edit-button */
+.edit-button {
+  background-color: darkgoldenrod;
+  color: white;
+  border: thin solid gray;
+  border-radius: 3px;
+}
+/* #end-style */
+/* #style .remove-button */
+.remove-button {
+  background-color: darkred;
+  color: white;
+  border: thin solid gray;
+  border-radius: 3px;
+}
+/* #end-style */
+/* #style .small */
+.small{
+  height: var(--small-label-size);
+  font-size: calc(var(--small-label-size) * 0.6);  
+}
+/* #end-style */
+/* #style .medium */
+.medium{
+  height: var(--medium-label-size);
+  font-size: calc(var(--medium-label-size) * 0.6);  
+}
+/* #end-style */
+/* #style .large */
+.large{
+  height: var(--large-label-size);
+  font-size: calc(var(--large-label-size) * 0.6);  
+}
+/* #end-style */
