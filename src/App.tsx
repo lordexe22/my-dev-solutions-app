@@ -1,12 +1,11 @@
-import QRCreator from "./modules/qrCreator/qrCreator";
-// import CollapsibleContainer from './modules/collapsibleContainer/collapsibleContainer';
 import './styles.css';
+import Authenticator from "./modules/authenticator";
 
 const App = () => {
 
   return (
     <div className="app-container">
-      <QRCreator/>
+      <Authenticator></Authenticator>
     </div>
   )
 }
