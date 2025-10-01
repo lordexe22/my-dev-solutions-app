@@ -1,6 +1,8 @@
-// authenticator.config.ts
-export const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string;
+/* authenticator/authenticator.config.ts */
 
-if (!GOOGLE_CLIENT_ID) {
-  throw new Error("Google Client ID is missing. Check your .env file.");
-}
+// #variable auth0Config - Auth0 platform config data 
+export const auth0Config = {
+  domain: import.meta.env.VITE_AUTH0_DOMAIN,
+  clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
+};
+// #end-variable

@@ -1,13 +1,13 @@
-import './styles.css';
-import Authenticator from "./modules/authenticator";
+// src\App.tsx
+import Authenticator from "./modules/authenticator/authenticator";
 
 const App = () => {
-
   return (
-    <div className="app-container">
-      <Authenticator></Authenticator>
+    <div>
+      <h1>Mi App con Auth0 y Google</h1>
+      <Authenticator />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
