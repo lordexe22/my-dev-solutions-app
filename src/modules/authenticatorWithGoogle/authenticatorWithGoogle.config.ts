@@ -1,8 +1,5 @@
 // authenticatorWithGoogle.config.ts
-
-interface GoogleConfig {
-  clientId: string;
-}
+import type { GoogleConfig } from "./authenticatorWithGoogle.types";
 
 export const googleConfig: GoogleConfig = {
   clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID as string,
