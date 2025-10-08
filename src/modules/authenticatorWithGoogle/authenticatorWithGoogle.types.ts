@@ -32,8 +32,6 @@ export interface GoogleConfig {
 export interface AuthenticatorWithGoogleProps {
   /** Callback que recibe el usuario decodificado luego de un login exitoso. */
   onAuth: (user: GoogleUser | null) => void;
-  /** Callback opcional que se ejecuta si se detecta un login automático con Google One Tap. */
-  onAutoLogin?: (user: GoogleUser) => void;
   /** Modo de uso del botón, que define si se está logueando o creando una nueva cuenta. */
   mode: "login" | "signup";
 }

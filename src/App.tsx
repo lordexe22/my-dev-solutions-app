@@ -1,7 +1,7 @@
 import './styles.css';
 import { useState } from 'react';
 import { AuthenticatorWithGoogle } from './modules/authenticatorWithGoogle';
-import type { GoogleUser } from './modules/authenticatorWithGoogle/authenticatorWithGoogle.types';
+import type { GoogleUser } from './modules/authenticatorWithGoogle';
 
 const App = () => {
   const [user, setUser] = useState<GoogleUser | null>(null);
@@ -10,7 +10,6 @@ const App = () => {
     <div className="app-container">
       <AuthenticatorWithGoogle 
         onAuth={setUser}
-        onAutoLogin={setUser} // captura login automático
         mode="login" // o "signup" según el flujo deseado
       />
 
