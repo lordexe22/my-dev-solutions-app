@@ -1,33 +1,18 @@
-import './styles.css';
-import { useState } from 'react';
-import { AuthenticatorWithGoogle } from './modules/authenticatorWithGoogle';
-import type { GoogleUser } from './modules/authenticatorWithGoogle';
+// import './styles/global.css';
+import './styles/button.css'
 
 const App = () => {
-  const [user, setUser] = useState<GoogleUser | null>(null);
 
   return (
-    <div className="app-container">
-      <AuthenticatorWithGoogle 
-        onAuth={setUser}
-        mode="login" // o "signup" según el flujo deseado
-      />
-
-      {user && (
-        <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-          <h3>Usuario autenticado</h3>
-          <img
-            src={user.picture}
-            alt={user.name}
-            width={80}
-            height={80}
-            style={{ borderRadius: '50%' }}
-          />
-          <p><strong>Nombre:</strong> {user.name}</p>
-          <p><strong>Email:</strong> {user.email}</p>
-        </div>
-      )}
+    <div>
+      <button className='button-primary button-large'>
+        hola
+      </button>
+      <button className='button-secondary button-small'>
+        bebe
+      </button>
     </div>
+    
   );
 };
 

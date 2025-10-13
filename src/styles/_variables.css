@@ -1,0 +1,57 @@
+/* src\styles\_variables.css */
+:root {
+  /* #section Breakpoints */
+  --breakpoint-mobile: 480px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-desktop-lg: 1440px;
+  /* #end-section */
+  /* #section Button theme styles */
+  --button-primary-color: #ffffff;
+  --button-primary-color-disabled: #e5e7eb;
+  --button-primary-bgcolor: #2563eb;
+  --button-primary-bgcolor-hover: #1d4ed8;
+  --button-primary-bgcolor-active: #1e40af;
+  --button-primary-bgcolor-disabled: #93a3c0;
+  --button-primary-border-color: #2563eb;
+  --button-primary-border-color-hover: #1d4ed8;
+  --button-primary-border-color-active: #1e40af;
+  --button-primary-border-color-focus: #93c5fd;
+  --button-primary-border-color-disabled: #93a3c0;
+
+  --button-secondary-color: #111827;
+  --button-secondary-color-disabled: #9ca3af;
+
+  --button-secondary-bgcolor: #f3f4f6;
+  --button-secondary-bgcolor-hover: #e5e7eb;
+  --button-secondary-bgcolor-active: #d1d5db;
+  --button-secondary-bgcolor-disabled: #f9fafb;
+  --button-secondary-border-color: #d1d5db;
+  --button-secondary-border-color-hover: #9ca3af;
+  --button-secondary-border-color-active: #6b7280;
+  --button-secondary-border-color-focus: #93c5fd;
+  --button-secondary-border-color-disabled: #e5e7eb;
+  /* #end-section */
+  /* #section Button size styles */
+  --button-small-font-size: 0.875rem;
+  --button-small-padding-y: 0.375rem;
+  --button-small-padding-x: 0.75rem;
+  --button-small-border-radius: 0.375rem;
+
+  --button-medium-font-size: 1rem;
+  --button-medium-padding-y: 0.5rem;
+  --button-medium-padding-x: 1rem;
+  --button-medium-border-radius: 0.5rem;
+
+  --button-large-font-size: 1.125rem;
+  --button-large-padding-y: 0.75rem;
+  --button-large-padding-x: 1.25rem;
+  --button-large-border-radius: 0.5rem;
+  /* #end-section */
+  /* #section Button shadows */
+  --button-shadow-default: 0 2px 6px rgba(0, 0, 0, 0.15);
+  --button-shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.25);
+  --button-shadow-active: 0 2px 4px rgba(0, 0, 0, 0.35);
+  /* #end-section */
+
+}
