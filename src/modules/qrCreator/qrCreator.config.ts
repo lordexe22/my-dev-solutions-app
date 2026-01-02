@@ -1,4 +1,4 @@
-// src\modules\qrCreator\qrCreator.config.ts
+// src/modules/qrCreator/qrCreator.config.ts
 
 import QRCodeStyling from 'qr-code-styling'
 import type { Options, DownloadOptions } from 'qr-code-styling';
@@ -11,7 +11,7 @@ export const enabledConfigOptions: EnabledConfigOptions = {
   cornersDotOptions: true,
   backgroundOptions: true,
   imageOptions: true,
-  qrOptions: true
+  qrOptions: false // ⚠️ DESHABILITADO
 }
 
 export const defaultConfigOptions: Options = {
@@ -66,8 +66,15 @@ export const defaultDownloadOptions: DownloadOptions = {
   extension: 'png', // "svg" | "png" | "jpeg" | "webp"
 }
 
-/** qrCode */
-export const qrCode = new QRCodeStyling(defaultConfigOptions);
+/**
+ * Factory function para crear una nueva instancia de QRCodeStyling.
+ * Esto permite tener instancias locales por componente en lugar de una global.
+ * 
+ * @returns Nueva instancia de QRCodeStyling
+ */
+export const createQRCodeInstance = () => {
+  return new QRCodeStyling(defaultConfigOptions);
+}
 
 /** #info
  * 
