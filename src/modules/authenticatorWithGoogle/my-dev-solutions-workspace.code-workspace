@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "../../../../my-dev-solutions-server"
+		},
+		{
+			"path": "../../../../my-dev-solutions-designs"
 		}
 	],
 	"settings": {}
