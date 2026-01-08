@@ -1,6 +1,7 @@
 // import './styles/global.css';
 import './styles/button.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
 import AuthenticatorButtonWithGoogleExample from './modules/AuthenticatorButtonWithGoogle/AuthenticatorButtonWithGoogle.example';
 
 const App = () => {
@@ -13,18 +14,7 @@ const App = () => {
         </nav>
 
         <Routes>
-          <Route path="/" element={
-            <div style={{ padding: '20px' }}>
-              <h1>My Dev Solutions App</h1>
-              <p>Selecciona un ejemplo del menú de navegación</p>
-              <button className='button-primary button-large'>
-                hola
-              </button>
-              <button className='button-secondary button-small'>
-                bebe
-              </button>
-            </div>
-          } />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/example/AuthenticatorButtonWithGoogle" element={<AuthenticatorButtonWithGoogleExample />} />
         </Routes>
       </div>

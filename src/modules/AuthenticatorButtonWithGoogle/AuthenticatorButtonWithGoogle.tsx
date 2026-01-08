@@ -1,8 +1,8 @@
 // AuthenticatorButtonWithGoogle.tsx
 /* #info - Google OAuth authentication button component with full customization */
 // #section Imports
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { googleClientId, defaultProps, googleButtonConfig } from "./AuthenticatorButtonWithGoogle.config";
+import { GoogleLogin } from "@react-oauth/google";
+import { defaultProps, googleButtonConfig } from "./AuthenticatorButtonWithGoogle.config";
 import { handleGoogleSuccess, handleGoogleError, validateWidth } from "./AuthenticatorButtonWithGoogle.utils";
 import type { AuthenticatorButtonWithGoogleProps } from "./AuthenticatorButtonWithGoogle.types";
 import styles from "./AuthenticatorButtonWithGoogle.module.css";
@@ -27,21 +27,19 @@ const AuthenticatorButtonWithGoogle = ({
   // #end-step
   // #step 2 - Render login button
   return (
-    <GoogleOAuthProvider clientId={googleClientId}>
-      <div className={`${styles.container} ${className || ""}`}>
-        <GoogleLogin
-          onSuccess={(response) => handleGoogleSuccess(response, onSuccess, onError)}
-          onError={() => handleGoogleError(onError)}
-          size={size}
-          shape={shape}
-          logo_alignment={logo_alignment}
-          width={width}
-          type={type}
-          theme={theme}
-          ux_mode={ux_mode}
-        />
-      </div>
-    </GoogleOAuthProvider>
+    <div className={`${styles.container} ${className || ""}`}>
+      <GoogleLogin
+        onSuccess={(response) => handleGoogleSuccess(response, onSuccess, onError)}
+        onError={() => handleGoogleError(onError)}
+        size={size}
+        shape={shape}
+        logo_alignment={logo_alignment}
+        width={width}
+        type={type}
+        theme={theme}
+        ux_mode={ux_mode}
+      />
+    </div>
   );
   // #end-step
 };
