@@ -91,7 +91,6 @@
   color: var(--modal-body-color);
   background-color: var(--modal-body-bg-color);
   line-height: 1.4;
-  border: thin solid red;
   /* #end-section */
   /* #section scrollbar */
   &::-webkit-scrollbar {
@@ -133,7 +132,7 @@
 /* #style .modal--fixed */
 .modal--fixed { /* Busca mantener una altura fija en la ventana modal */
   height: 80vh; 
-  max-height: var(--modal-max-height)
+  max-height: var(--modal-max-height);
 }
 /* #end-style */
 /* #style .modal--fixed .modal-body */

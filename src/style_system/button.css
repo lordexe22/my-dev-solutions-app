@@ -4,14 +4,23 @@
 /* #end-section */
 /* #section Required elements structure */
 /* 
-(.btn-pri | .btn-sec) & (.btn-sm | btn-md | btn-lg)
-  img.btn-icon
+(.btn-pri | .btn-sec) & (.btn-sm | btn-md | btn-lg) & (.btn-icon-left | .btn-icon-none)
+  img.btn-icon (optional, always on left)
   span
+  
+Alignment variants:
+  .btn-left - Text aligned to left (default when icon present)
+  .btn-center - Text aligned to center (default)
+  .btn-right - Text aligned to right
 */
 /* #end-section */
 /* #style .btn-pri */
 .btn-pri {
   /* #section general */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
   color: var(--btn-pri-color);
   background-color: var(--btn-pri-bgcolor);
   border: 2px solid var(--btn-pri-bdcolor);
@@ -20,6 +29,7 @@
   padding: var(--btn-md-padding-y) var(--btn-md-padding-x);
   border-radius: var(--btn-md-border-radius);
   box-shadow: var(--btn-shadow-default);
+  cursor: pointer;
   /* #end-section */
   /* #section hover */
   &:hover {
@@ -62,6 +72,10 @@
 /* #style .btn-sec */
 .btn-sec {
   /* #section general */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   color: var(--btn-sec-color);
   background-color: var(--btn-sec-bgcolor);
   border: 2px solid var(--btn-sec-bdcolor);
@@ -70,6 +84,7 @@
   padding: var(--btn-md-padding-y) var(--btn-md-padding-x);
   border-radius: var(--btn-md-border-radius);
   box-shadow: var(--btn-shadow-default);
+  cursor: pointer;
   /* #end-section */
   /* #section hover */
   &:hover {
@@ -109,6 +124,13 @@
   /* #end-section */
 }
 /* #end-style */
+/* #style .btn-fit - Adjust button width to content */
+.btn-fit {
+  /* #section general */
+  width: fit-content;
+  /* #end-section */
+}
+/* #end-style */
 /* #style .btn-sm */
 .btn-sm {
   /* #section general */
@@ -136,24 +158,80 @@
   /* #end-section */
 }
 /* #end-style */
-/* #style .btn-icon */
+/* #style .btn-icon - FIXED ON THE LEFT (except when alone) */
 .btn-pri .btn-icon,
 .btn-sec .btn-icon {
+  /* #section general */
   width: var(--btn-md-icon-size);
   height: var(--btn-md-icon-size);
-  margin-right: 0.5rem;
-  vertical-align: middle;
+  margin-left: 0;
+  margin-right: auto;
+  flex-shrink: 0;
+  order: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* #end-section */
 }
+
+/* #section Icon-only buttons - center the icon */
+.btn-pri .btn-icon:only-child,
+.btn-sec .btn-icon:only-child {
+  margin-right: 0;
+  margin-left: auto;
+}
+/* #end-section */
+
 .btn-sm .btn-icon {
+  /* #section general */
   width: var(--btn-sm-icon-size);
   height: var(--btn-sm-icon-size);
+  /* #end-section */
 }
+
 .btn-md .btn-icon {
+  /* #section general */
   width: var(--btn-md-icon-size);
   height: var(--btn-md-icon-size);
+  /* #end-section */
 }
+
 .btn-lg .btn-icon {
+  /* #section general */
   width: var(--btn-lg-icon-size);
   height: var(--btn-lg-icon-size);
+  /* #end-section */
+}
+/* #end-style */
+
+/* #style Text alignment - ONLY AFFECTS THE SPAN ELEMENT */
+.btn span {
+  /* #section general */
+  flex: 0 1 auto;
+  margin-right: 0.5rem;
+  padding-left: 0.25rem;
+  /* Ensures proper spacing from icon */
+  /* #end-section */
+}
+
+.btn-left span {
+  /* #section general */
+  text-align: left;
+  flex: 1;
+  /* #end-section */
+}
+
+.btn-center span {
+  /* #section general */
+  text-align: center;
+  flex: 1;
+  /* #end-section */
+}
+
+.btn-right span {
+  /* #section general */
+  text-align: right;
+  flex: 1;
+  /* #end-section */
 }
 /* #end-style */
