@@ -1,12 +1,14 @@
 // import './styles/global.css';
 import './style_system/button.css'
 import './style_system/modal.css'
+import './style_system/toast.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import AuthenticatorButtonWithGoogleExample from './modules/AuthenticatorButtonWithGoogle/AuthenticatorButtonWithGoogle.example';
 import StyleSystemShowcase from './pages/StyleSystemShowcase';
 import ButtonExamples from './pages/ButtonExamples';
 import ModalExamples from './pages/ModalExamples';
+import ToastExamples from './pages/ToastExamples';
 
 const App = () => {
   return (
@@ -23,6 +25,7 @@ const App = () => {
           <Route path="/style-system" element={<StyleSystemShowcase />} />
           <Route path="/button-examples" element={<ButtonExamples />} />
           <Route path="/modal-examples" element={<ModalExamples />} />
+          <Route path="/toast-examples" element={<ToastExamples />} />
           <Route path="/example/AuthenticatorButtonWithGoogle" element={<AuthenticatorButtonWithGoogleExample />} />
         </Routes>
       </div>

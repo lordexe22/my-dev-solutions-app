@@ -68,7 +68,7 @@
 /* #variable Modals */
 :root {
   /* #section Overlay config */
-  --overlay-bgcolor: rgba(15, 15, 15, 0.6);
+  --overlay-bg-color: rgba(15, 15, 15, 0.6);
   --overlay-blur: 3px; /* Desenfoca el fondo */
   --modal-z-index: 1000;
   /* #end-section */
@@ -90,6 +90,50 @@
   --modal-footer-gap: 0.75rem;
   --modal-footer-padding: 0.875rem 1rem;
   --modal-body-padding: 0 1.5rem;
+  /* #end-section */
+}
+/* #end-variable */
+/* #variable Toasts */
+:root {
+  /* #section Toast positioning & spacing */
+  --toast-z-index: 2000;
+  --toast-container-padding: 1rem;
+  --toast-container-padding-mobile: 0.75rem;
+  --toast-gap: 0.75rem;
+  /* #end-section */
+  /* #section Toast sizes */
+  --toast-max-width: 380px;
+  --toast-font-size: 0.95rem;
+  --toast-padding: 1rem;
+  --toast-border-radius: 0.5rem;
+  --toast-icon-size: 1.25rem;
+  --toast-icon-gap: 0.75rem;
+  /* #end-section */
+  /* #section Toast shadows */
+  --toast-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  /* #end-section */
+  /* #section Toast animation */
+  --toast-animation-duration: 0.25s;
+  /* #end-section */
+  /* #section Toast colors - Success */
+  --toast-success-bgcolor: #dcfce7;
+  --toast-success-color: #166534;
+  --toast-success-border-color: #86efac;
+  /* #end-section */
+  /* #section Toast colors - Error */
+  --toast-error-bgcolor: #fee2e2;
+  --toast-error-color: #991b1b;
+  --toast-error-border-color: #fca5a5;
+  /* #end-section */
+  /* #section Toast colors - Warning */
+  --toast-warning-bgcolor: #fef3c7;
+  --toast-warning-color: #92400e;
+  --toast-warning-border-color: #fcd34d;
+  /* #end-section */
+  /* #section Toast colors - Info */
+  --toast-info-bgcolor: #dbeafe;
+  --toast-info-color: #0c4a6e;
+  --toast-info-border-color: #93c5fd;
   /* #end-section */
 }
 /* #end-variable */

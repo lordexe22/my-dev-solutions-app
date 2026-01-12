@@ -22,6 +22,7 @@ Contiene todas las variables CSS (colores, tamaños, breakpoints, etc.) que se r
 - Breakpoints (móvil, tablet, desktop)
 - Variables de botones (colores, tamaños, sombras, iconos)
 - Variables de modales (colores, dimensiones, animaciones)
+- Variables de toasts (colores, posicionamiento, duraciones, animaciones)
 
 ### `button.css`
 **Estilos definitivos para botones**
@@ -99,6 +100,47 @@ Define una ventana modal completa con estructura fija:
 - Diseño responsive (92% ancho máximo)
 - Sombras y bordes configurables
 - Footer con gradiente opcional
+
+### `toast.css`
+**Estilos definitivos para notificaciones toast**
+
+Define un sistema de notificaciones temporal y apilable:
+- `.toast-container`: Contenedor con posicionamiento configurable
+- `.toast`: Elemento base de notificación
+- `.toast-success`, `.toast-error`, `.toast-warning`, `.toast-info`: Variantes de tipo
+- `.toast-3s`, `.toast-4s`, `.toast-5s`: Duraciones configurables
+- `.toast-top-right`, `.toast-top-left`, `.toast-bottom-right`, `.toast-bottom-left`: Posicionamiento
+- `.toast-fade-in`, `.toast-slide-in`: Animaciones de entrada
+
+**Estructura HTML requerida:**
+```html
+<div class="toast-container toast-top-right">
+  <div class="toast toast-success toast-3s toast-slide-in">
+    <div class="toast-icon">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <!-- Ícono SVG -->
+      </svg>
+    </div>
+    <div class="toast-message">
+      <h4>Título</h4>
+      <p>Mensaje</p>
+    </div>
+    <div class="toast-actions">
+      <button class="btn-sec btn-sm">Cerrar</button>
+    </div>
+  </div>
+</div>
+```
+
+**Características:**
+- Notificaciones temporales con auto-dismiss (3s, 4s, 5s)
+- 4 tipos de notificación (success, error, warning, info)
+- Posicionamiento en cualquier esquina
+- Animaciones de entrada suaves (fade-in, slide-in)
+- Apilamiento automático de múltiples toasts
+- Estructura flexible (icono y acciones opcionales)
+- Reutiliza botones del Style System
+- Diseño responsive y accesible
 
 ### `main.css`
 **Estilos globales y reset**

@@ -1,6 +1,9 @@
 /* src\styles\main.css */
 /* #section Imports */
 @import url('./_reset.css');
+@import url('./button.css');
+@import url('./modal.css');
+@import url('./toast.css');
 /* fuentes globales */
 /* Tipografias */
 /* Breakpoints */

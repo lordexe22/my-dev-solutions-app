@@ -1,0 +1,550 @@
+/* src\style_system\toast.css */
+/* #section Imports */
+@import url('_variables.css');
+/* #end-section */
+/* #section Required elements structure */
+/* 
+  .toast-container (.toast-top-right | .toast-top-left | .toast-bottom-right | .toast-bottom-left)
+    .toast (.toast-success | .toast-error | .toast-warning | .toast-info) & (.toast-3s | .toast-4s | .toast-5s) & (.toast-fade-in | .toast-slide-in)
+      .toast-icon (optional, svg or element)
+      .toast-message
+      .toast-actions (optional)
+        button.btn-pri or .btn-sec (close or action button, optional)
+*/
+/* #end-section */
+/* #style .toast-container */
+.toast-container {
+  position: fixed;
+  display: flex;
+  gap: var(--toast-gap);
+  padding: var(--toast-container-padding);
+  pointer-events: none;
+  z-index: var(--toast-z-index);
+  /* Top positions: column-reverse para que nuevos aparezcan arriba y antiguos bajen */
+  &.toast-top-right {
+    top: var(--toast-container-padding);
+    right: var(--toast-container-padding);
+    flex-direction: column-reverse;
+    align-items: flex-end;
+  }
+  &.toast-top-left {
+    top: var(--toast-container-padding);
+    left: var(--toast-container-padding);
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+  /* Bottom positions: column para que nuevos aparezcan abajo y antiguos suban */
+  &.toast-bottom-right {
+    bottom: var(--toast-container-padding);
+    right: var(--toast-container-padding);
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  &.toast-bottom-left {
+    bottom: var(--toast-container-padding);
+    left: var(--toast-container-padding);
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* #end-style */
+/* #style .toast */
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--toast-icon-gap);
+  padding: var(--toast-padding);
+  border-radius: var(--toast-border-radius);
+  box-shadow: var(--toast-shadow);
+  background-color: var(--toast-bg-color);
+  color: var(--toast-color);
+  border-left: 4px solid var(--toast-border-color);
+  pointer-events: auto;
+  max-width: var(--toast-max-width);
+  width: 100%;
+  box-sizing: border-box;
+  /* Transición suave para layout collapsa durante la salida y reposicionamiento de toasts debajo */
+  transition: 
+    transform 220ms cubic-bezier(.2,.8,.2,1),
+    margin 220ms cubic-bezier(.2,.8,.2,1),
+    max-height 300ms cubic-bezier(.2,.8,.2,1),
+    padding 300ms cubic-bezier(.2,.8,.2,1);
+  will-change: transform, margin, max-height, padding;
+}
+/* #end-style */
+/* #style .toast-icon */
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--toast-icon-size);
+  height: var(--toast-icon-size);
+  flex-shrink: 0;
+  svg {
+    width: 100%;
+    height: 100%;
+    fill: currentColor;
+  }
+}
+/* #end-style */
+/* #style .toast-message */
+.toast-message {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  line-height: 1.4;
+  font-size: var(--toast-font-size);
+  h4 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.9;
+  }
+}
+/* #end-style */
+/* #style .toast-actions */
+.toast-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  margin-left: auto;
+  button {
+    pointer-events: auto;
+  }
+}
+/* #end-style */
+/* #style .toast-success */
+.toast-success {
+  --toast-bg-color: var(--toast-success-bgcolor);
+  --toast-color: var(--toast-success-color);
+  --toast-border-color: var(--toast-success-border-color);
+}
+/* #end-style */
+/* #style .toast-error */
+.toast-error {
+  --toast-bg-color: var(--toast-error-bgcolor);
+  --toast-color: var(--toast-error-color);
+  --toast-border-color: var(--toast-error-border-color);
+}
+/* #end-style */
+/* #style .toast-warning */
+.toast-warning {
+  --toast-bg-color: var(--toast-warning-bgcolor);
+  --toast-color: var(--toast-warning-color);
+  --toast-border-color: var(--toast-warning-border-color);
+}
+/* #end-style */
+/* #style .toast-info */
+.toast-info {
+  --toast-bg-color: var(--toast-info-bgcolor);
+  --toast-color: var(--toast-info-color);
+  --toast-border-color: var(--toast-info-border-color);
+}
+/* #end-style */
+/* #style .toast-fade-in.toast-3s */
+.toast-fade-in.toast-3s {
+  animation: toastLifecycleFade3s 3.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style .toast-fade-in.toast-4s */
+.toast-fade-in.toast-4s {
+  animation: toastLifecycleFade4s 4.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style .toast-fade-in.toast-5s */
+.toast-fade-in.toast-5s {
+  animation: toastLifecycleFade5s 5.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style .toast-fade-in.toast-permanent */
+.toast-fade-in.toast-permanent {
+  animation: toastFadeInOnly 0.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style Animations de slide 3s */
+.toast-top-right .toast-slide-in.toast-3s,
+.toast-bottom-right .toast-slide-in.toast-3s {
+  animation: toastLifecycleSlideRight3s 3.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style Animations de slide 4s */
+.toast-top-right .toast-slide-in.toast-4s,
+.toast-bottom-right .toast-slide-in.toast-4s {
+  animation: toastLifecycleSlideRight4s 4.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style Animations de slide 5s */
+.toast-top-right .toast-slide-in.toast-5s,
+.toast-bottom-right .toast-slide-in.toast-5s {
+  animation: toastLifecycleSlideRight5s 5.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style >> Animations de slide 3s desde izquierda */
+.toast-top-left .toast-slide-in.toast-3s,
+.toast-bottom-left .toast-slide-in.toast-3s {
+  animation: toastLifecycleSlideLeft3s 3.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style >> Animations de slide 4s desde izquierda */
+.toast-top-left .toast-slide-in.toast-4s,
+.toast-bottom-left .toast-slide-in.toast-4s {
+  animation: toastLifecycleSlideLeft4s 4.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style >> Animations de slide 5s desde izquierda */
+.toast-top-left .toast-slide-in.toast-5s,
+.toast-bottom-left .toast-slide-in.toast-5s {
+  animation: toastLifecycleSlideLeft5s 5.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style >> entrada slide desde derecha, sin salida automática */
+.toast-top-right .toast-slide-in.toast-permanent,
+.toast-bottom-right .toast-slide-in.toast-permanent {
+  animation: toastSlideInOnlyRight 0.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #style >> entrada slide desde izquierda, sin salida automática */
+.toast-top-left .toast-slide-in.toast-permanent,
+.toast-bottom-left .toast-slide-in.toast-permanent {
+  animation: toastSlideInOnlyLeft 0.3s ease-in-out forwards;
+}
+/* #end-style */
+/* #keyframe toastLifecycleFade3s */
+@keyframes toastLifecycleFade3s {
+  /* #section 0% - inicio invisible */
+  0% { 
+    opacity: 0;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 7.5% - aparece completamente */
+  7.5% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 90.9% - último momento visible antes de desaparecer */
+  90.9% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 100% - completamente desaparecido, colapso de altura */
+  100% { 
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+  /* #end-section */
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleFade4s */
+@keyframes toastLifecycleFade4s {
+  0% { 
+    opacity: 0;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  5.8% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  93% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleFade5s */
+@keyframes toastLifecycleFade5s {
+  0% { 
+    opacity: 0;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  4.7% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  94.3% { 
+    opacity: 1;
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideRight3s */
+@keyframes toastLifecycleSlideRight3s {
+  /* #section 0% - inicio invisible y desplazado desde derecha */
+  0% { 
+    opacity: 0; 
+    transform: translateX(100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 7.5% - aparece y se posiciona */
+  7.5% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 90.9% - último momento visible */
+  90.9% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 100% - desaparece y colapsa */
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+  /* #end-section */
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideRight4s */
+@keyframes toastLifecycleSlideRight4s {
+  0% { 
+    opacity: 0; 
+    transform: translateX(100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  5.8% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  93% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideRight5s */
+@keyframes toastLifecycleSlideRight5s {
+  0% { 
+    opacity: 0; 
+    transform: translateX(100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  4.7% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  94.3% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideLeft3s */
+@keyframes toastLifecycleSlideLeft3s {
+  /* #section 0% - inicio invisible y desplazado desde izquierda */
+  0% { 
+    opacity: 0; 
+    transform: translateX(-100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 7.5% - aparece y se posiciona */
+  7.5% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 90.9% - último momento visible */
+  90.9% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  /* #end-section */
+  /* #section 100% - desaparece y colapsa */
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+  /* #end-section */
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideLeft4s */
+@keyframes toastLifecycleSlideLeft4s {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  5.8% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  93% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastLifecycleSlideLeft5s */
+@keyframes toastLifecycleSlideLeft5s {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-100%) scale(0.95);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  4.7% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  94.3% { 
+    opacity: 1; 
+    transform: translateX(0) scale(1);
+    max-height: 500px;
+    margin-bottom: var(--toast-gap);
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(0) scale(1);
+    max-height: 0;
+    margin-bottom: 0;
+    margin-top: 0;
+    visibility: hidden;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastFadeInOnly */
+@keyframes toastFadeInOnly {
+  0% { 
+    opacity: 0;
+  }
+  100% { 
+    opacity: 1;
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastSlideInOnlyRight */
+@keyframes toastSlideInOnlyRight {
+  0% { 
+    opacity: 0;
+    transform: translateX(100%) scale(0.95);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+/* #end-keyframe */
+/* #keyframe toastSlideInOnlyLeft */
+@keyframes toastSlideInOnlyLeft {
+  0% { 
+    opacity: 0;
+    transform: translateX(-100%) scale(0.95);
+  }
+  100% { 
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+/* #end-keyframe */
+/* #media (max-width: 480px) */
+@media (max-width: 480px) {
+  .toast-container {
+    padding: var(--toast-container-padding-mobile);
+    &.toast-top-right,
+    &.toast-top-left,
+    &.toast-bottom-right,
+    &.toast-bottom-left {
+      padding: var(--toast-container-padding-mobile);
+    }
+  }
+  
+  .toast {
+    max-width: 100%;
+    width: calc(100vw - var(--toast-container-padding-mobile) * 2);
+  }
+}
+/* #end-media */

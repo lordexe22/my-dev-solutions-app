@@ -64,6 +64,30 @@ const StyleSystemShowcase = () => {
             </Link>
           </div>
 
+          {/* Tarjeta de Toasts */}
+          <div style={{
+            padding: '1.5rem',
+            border: '1px solid #e5e7eb',
+            borderRadius: '0.75rem',
+            backgroundColor: '#f9fafb',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem'
+          }}>
+            <h3 style={{margin: 0}}>🔔 Toasts</h3>
+            <p style={{margin: 0, color: '#666', fontSize: '0.875rem'}}>
+              Explora notificaciones Toast: tipos, duraciones, posiciones, animaciones y apilamiento.
+            </p>
+            <Link to="/toast-examples" style={{textDecoration: 'none', marginTop: 'auto'}}>
+              <button className="btn-pri btn-md btn-fit" style={{width: '100%'}}>
+                <svg className="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 22C6.48 22 2 17.52 2 12S6.48 2 12 2s10 4.48 10 10-4.48 10-10 10zm0-18c-4.42 0-8 3.58-8 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                </svg>
+                <span>Ver Ejemplos de Toasts</span>
+              </button>
+            </Link>
+          </div>
+
         </div>
       </section>
 
